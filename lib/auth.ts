@@ -3,6 +3,8 @@ import { prismaAdapter } from "better-auth/adapters/prisma";
 import { prisma } from "./db";
 import { env } from "./env";
 import { emailOTP } from "better-auth/plugins";
+import { resend } from "./resend";
+import OtpEmail from "@/components/email/otp";
 
 export const auth = betterAuth({
     database: prismaAdapter(prisma, {
@@ -18,9 +20,15 @@ export const auth = betterAuth({
     },
     plugins: [
         emailOTP({
-            async sendVerificationOTP() {
-                // NOTE: Implement send OTP logic here
-            }
-        })
-    ]
+            async sendVerificationOTP({ email, otp }) {
+                await resend.emails.send({
+                    from: 'Acme <onboarding@resend.dev>',
+                    to: [email],
+                    subject: 'Arch LMS - Verify your email',
+                    react: OtpEmail({ otp }),
+                    // html: `<p>Your OTP is <strong>${otp}</strong></p>`,
+                });
+            },
+        }),
+    ],
 });

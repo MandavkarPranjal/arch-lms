@@ -5,13 +5,18 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authClient } from "@/lib/auth-client";
-import { Loader } from "lucide-react";
-import { useTransition } from "react";
+import { Loader, Loader2, Send } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState, useTransition } from "react";
 import { toast } from "sonner";
 
 export function LoginForm() {
+    const router = useRouter();
     const [googlePending, startGoogleTransition] = useTransition();
+    const [emailPending, startEmailTransition] = useTransition();
+    const [email, setEmail] = useState("");
 
+    // Google handler
     async function signInWithGoogle() {
         startGoogleTransition(async () => {
             await authClient.signIn.social({
@@ -24,6 +29,25 @@ export function LoginForm() {
                     onError: (error) => {
                         toast.error("Internal server error, please try again later");
                     },
+                },
+            });
+        });
+    }
+
+    // Email handler
+    function signInWithEmail() {
+        startEmailTransition(async () => {
+            await authClient.emailOtp.sendVerificationOtp({
+                email: email,
+                type: 'sign-in',
+                fetchOptions: {
+                    onSuccess: () => {
+                        toast.success("Email sent, please check your inbox");
+                        router.push(`/verify-request?email=${email}`);
+                    },
+                    onError: () => {
+                        toast.error("Error sending email, please try again later");
+                    }
                 },
             });
         });
@@ -74,10 +98,31 @@ export function LoginForm() {
                 <div className="grid gap-3">
                     <div className="grid gap-2">
                         <Label htmlFor="email">Email</Label>
-                        <Input type="email" placeholder="m@example.com" />
+                        <Input
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            type="email"
+                            placeholder="m@example.com"
+                            required
+                        />
                     </div>
 
-                    <Button>Continue with Email</Button>
+                    <Button
+                        onClick={signInWithEmail}
+                        disabled={emailPending}
+                    >
+                        {emailPending ? (
+                            <>
+                                <Loader2 className="size-4 animate-spin" />
+                                <span>Sending...</span>
+                            </>
+                        ) : (
+                            <>
+                                <Send className="size-4" />
+                                <span>Continue with Email</span>
+                            </>
+                        )}
+                    </Button>
                 </div>
             </CardContent>
         </Card >
