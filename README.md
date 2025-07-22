@@ -7,11 +7,17 @@
 - [x] add rate limiting, bot protection and Invalid email login
 - [x] create login page
 - [ ] create landing page
-- [ ] create Navbar
-- [ ] create admin dashboard
+- [x] create Navbar
+- [x] create admin dashboard
 - [ ] add course creation
 - [ ] create/add text editor
-- [ ] progress tracking
 - [ ] file upload
 - [ ] file deletion
-- [ ] create course page
+- [ ] create public facing course page
+- [ ] course editing functionality
+- [ ] creating & deleting chapters/lesssons
+- [ ] implement enrollment via stripe
+- [ ] stripe webhooks
+- [ ] create analytics page
+- [ ] create enrollment dashboard
+- [ ] implement progress tracking
