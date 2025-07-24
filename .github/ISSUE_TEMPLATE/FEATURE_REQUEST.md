@@ -9,11 +9,11 @@ assignees: '' #Consider assigning directly some mantainer
 
 ## 🚀 Feature Description
 
-Please give us a clear and concise description of the feature or improvement you want to see.
+Describe the feature or improvement.
 
 ## 🎯 Why Is This Needed?
 
-Explain why this feature would be useful for the project and its users.
+Why is this feature useful for the project and its users?
 
 ## 🛠️ Possible Implementation
 
@@ -21,7 +21,7 @@ If you have an idea of how to implement this feature, describe it here. Code sni
 
 ## 📸 Mockups or Examples
 
-If applicable, add mockups, diagrams, or examples to help explain your idea. We love visuals!
+Attach mockups, diagrams, or examples if helpful.
 
 ## Existing Examples
 
