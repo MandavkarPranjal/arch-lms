@@ -15,11 +15,10 @@ Provide a brief description of the changes introduced in this pull request.
 
 Please delete options that are not relevant and mark the relevant ones with an "x".
 
-- [x] 🐛 Bug fix (non-breaking change that fixes an issue)
+- [ ] 🐛 Bug fix (non-breaking change that fixes an issue)
 - [ ] ✨ New feature (non-breaking change that adds functionality)
 - [ ] ⚠️ Breaking change (fix or feature that would cause existing functionality to not work as expected)
 - [ ] 📝 Documentation update
-
 ## 🔄 Changes
 
 List all changes made in this pull request. Be specific and concise.
