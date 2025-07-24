@@ -17,11 +17,10 @@ Fill in with the steps to reproduce the behavior:
 
 e.g.
 
-1. Go to '...'
-2. Click on '...'
-3. Scroll down to '...'
-4. See error
-
+1. Go to '…'
+1. Click on '…'
+1. Scroll down to '…'
+1. Observe the error
 ## 🤔 Expected Behavior
 
 Give us a clear and concise description of what **you** expected to happen.
