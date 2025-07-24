@@ -2,7 +2,6 @@
 name: ⚙️ Pull Request
 about: Submit a pull request to contribute changes
 title: "[PR]: "
-
 ---
 
 ## 📋 Pull Request Template
