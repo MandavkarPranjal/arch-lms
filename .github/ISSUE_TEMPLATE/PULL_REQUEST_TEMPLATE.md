@@ -28,8 +28,7 @@ Explain the primary purpose or goal of this pull request. What problem does it s
 
 ## 📸 Screenshots (if applicable)
 
-Add screenshots to help explain your changes if changes where made on UI. A screenshot of the before and after.
-
+Add screenshots to help explain your changes if changes were made to the UI (before/after).
 ## 💬 Additional Comments
 
 Add any additional comments or context about the pull request here.
