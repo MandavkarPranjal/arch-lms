@@ -9,98 +9,98 @@ import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
 interface UploaderState {
-  id: string | null;
-  file: File | null;
-  uploading: boolean;
-  progress: number;
-  key?: string;
-  isDeleting: boolean;
-  error: boolean;
-  objectUrl?: string;
-  fileType: 'image' | 'video';
+    id: string | null;
+    file: File | null;
+    uploading: boolean;
+    progress: number;
+    key?: string;
+    isDeleting: boolean;
+    error: boolean;
+    objectUrl?: string;
+    fileType: 'image' | 'video';
 }
 
 export function Uploader() {
-  const [fileState, setFileState] = useState<UploaderState>({
-    error: false,
-    file: null,
-    id: null,
-    uploading: false,
-    progress: 0,
-    isDeleting: false,
-    fileType: 'image',
-  });
-
-  function uploadFile(file: File) {
-    setFileState((prev) => ({
-      ...prev,
-      uploading: true,
-      progress: 0,
-    }));
-
-    try {
-    } catch {}
-  }
-
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    if (acceptedFiles.length > 0) {
-      const file = acceptedFiles[0];
-      setFileState({
-        file: file,
+    const [fileState, setFileState] = useState<UploaderState>({
+        error: false,
+        file: null,
+        id: null,
         uploading: false,
         progress: 0,
-        objectUrl: URL.createObjectURL(file),
-        error: false,
-        id: uuidv4(),
         isDeleting: false,
         fileType: 'image',
-      });
+    });
+
+    function uploadFile(file: File) {
+        setFileState((prev) => ({
+            ...prev,
+            uploading: true,
+            progress: 0,
+        }));
+
+        try {
+        } catch {}
     }
-  }, []);
 
-  function rejectFiles(fileRejection: FileRejection[]) {
-    if (fileRejection.length) {
-      const toManyFiles = fileRejection.find(
-        (fileRejection) => fileRejection.errors[0].code === 'too-many-files',
-      );
+    const onDrop = useCallback((acceptedFiles: File[]) => {
+        if (acceptedFiles.length > 0) {
+            const file = acceptedFiles[0];
+            setFileState({
+                file: file,
+                uploading: false,
+                progress: 0,
+                objectUrl: URL.createObjectURL(file),
+                error: false,
+                id: uuidv4(),
+                isDeleting: false,
+                fileType: 'image',
+            });
+        }
+    }, []);
 
-      const fileSizeTooBig = fileRejection.find(
-        (rejection) => rejection.errors[0].code === 'file-too-large',
-      );
+    function rejectFiles(fileRejection: FileRejection[]) {
+        if (fileRejection.length) {
+            const toManyFiles = fileRejection.find(
+                (fileRejection) => fileRejection.errors[0].code === 'too-many-files',
+            );
 
-      if (fileSizeTooBig) {
-        toast.error('File Size exceeds the limit');
-      }
+            const fileSizeTooBig = fileRejection.find(
+                (rejection) => rejection.errors[0].code === 'file-too-large',
+            );
 
-      if (toManyFiles) {
-        toast.error('Too many files selected, max is 1');
-      }
+            if (fileSizeTooBig) {
+                toast.error('File Size exceeds the limit');
+            }
+
+            if (toManyFiles) {
+                toast.error('Too many files selected, max is 1');
+            }
+        }
     }
-  }
 
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    accept: { 'image/*': [] },
-    maxFiles: 1,
-    multiple: false,
-    maxSize: 5 * 1024 * 1024, // 5MB of max file size
-    onDropRejected: rejectFiles,
-  });
+    const { getRootProps, getInputProps, isDragActive } = useDropzone({
+        onDrop,
+        accept: { 'image/*': [] },
+        maxFiles: 1,
+        multiple: false,
+        maxSize: 5 * 1024 * 1024, // 5MB of max file size
+        onDropRejected: rejectFiles,
+    });
 
-  return (
-    <Card
-      {...getRootProps()}
-      className={cn(
-        'relative h-64 w-full border-2 border-dashed transition-colors duration-100 ease-in-out',
-        isDragActive
-          ? 'border-primary bg-primary/10 border-solid backdrop-blur-sm'
-          : 'border-border hover:border-primary',
-      )}
-    >
-      <CardContent className="flex h-full w-full items-center justify-center">
-        <input {...getInputProps()} />
-        <RenderEmptyState isDragActive={isDragActive} />
-      </CardContent>
-    </Card>
-  );
+    return (
+        <Card
+            {...getRootProps()}
+            className={cn(
+                'relative h-64 w-full border-2 border-dashed transition-colors duration-100 ease-in-out',
+                isDragActive
+                    ? 'border-primary bg-primary/10 border-solid backdrop-blur-sm'
+                    : 'border-border hover:border-primary',
+            )}
+        >
+            <CardContent className="flex h-full w-full items-center justify-center">
+                <input {...getInputProps()} />
+                <RenderEmptyState isDragActive={isDragActive} />
+            </CardContent>
+        </Card>
+    );
 }
