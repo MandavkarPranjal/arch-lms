@@ -11,6 +11,13 @@ export async function CreateCourse(data: CourseSchemaType): Promise<ApiResponse>
         const session = await auth.api.getSession({
             headers: await headers(),
         });
+
+        if (!session?.user?.id) {
+            return {
+                status: 'error',
+                message: 'Unauthorized access',
+            };
+        }
         const validation = courseSchema.safeParse(data);
 
         if (!validation.success) {
