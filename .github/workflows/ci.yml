@@ -36,8 +36,8 @@ jobs:
       - name: Install dependencies 📦
         run: pnpm install
 
-      - name: Type check 🔎
-        run: pnpm typecheck
-
       - name: Lint JS
         run: pnpm dlx oxlint@latest --deny-warnings
+
+      - name: Type check 🔎
+        run: pnpm typecheck
