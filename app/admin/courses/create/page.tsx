@@ -1,35 +1,54 @@
-"use client";
+'use client';
 
-import { Button, buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { courseCategories, courseLevels, courseSchema, CourseSchemaType, coursesStatus } from "@/lib/zodSchemas";
-import { ArrowLeft, PlusCircleIcon, PlusIcon, SparklesIcon } from "lucide-react";
-import Link from "next/link";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import slugify from "slugify";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { categories } from "@arcjet/next";
-import { RichTextEditor } from "@/components/rich-text-editor/Editor";
+import {
+    courseCategories,
+    courseLevels,
+    courseSchema,
+    CourseSchemaType,
+    coursesStatus,
+} from '@/lib/zodSchemas';
+import {
+    Form,
+    FormControl,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+} from '@/components/ui/form';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { RichTextEditor } from '@/components/rich-text-editor/Editor';
+import { ArrowLeft, PlusIcon, SparklesIcon } from 'lucide-react';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { Uploader } from '@/components/file-uploader/uploader';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { useForm } from 'react-hook-form';
+import slugify from 'slugify';
+import Link from 'next/link';
 
 export default function CourseCreatePage() {
     // 1. Define your form.
     const form = useForm<CourseSchemaType>({
         resolver: zodResolver(courseSchema),
         defaultValues: {
-            title: "",
-            description: "",
-            filekey: "",
+            title: '',
+            description: '',
+            filekey: '',
             price: 0,
             duration: 0,
-            level: "Beginner",
-            category: "Development",
-            smallDescription: "",
-            slug: "",
-            status: "Draft",
+            level: 'Beginner',
+            category: 'Development',
+            smallDescription: '',
+            slug: '',
+            status: 'Draft',
         },
     });
 
@@ -37,7 +56,7 @@ export default function CourseCreatePage() {
     function onSubmit(values: CourseSchemaType) {
         // Do something with the form values.
         // ✅ This will be type-safe and validated.
-        console.log(values)
+        console.log(values);
     }
     return (
         <>
@@ -45,8 +64,8 @@ export default function CourseCreatePage() {
                 <Link
                     href="/admin/courses"
                     className={buttonVariants({
-                        variant: "outline",
-                        size: "icon",
+                        variant: 'outline',
+                        size: 'icon',
                     })}
                 >
                     <ArrowLeft className="size-4" />
@@ -76,7 +95,7 @@ export default function CourseCreatePage() {
                                 )}
                             />
 
-                            <div className="flex gap-4 items-end">
+                            <div className="flex items-end gap-4">
                                 <FormField
                                     control={form.control}
                                     name="slug"
@@ -91,13 +110,17 @@ export default function CourseCreatePage() {
                                     )}
                                 />
 
-                                <Button type="button" className="w-fit" onClick={() => {
-                                    const titleValue = form.getValues("title")
+                                <Button
+                                    type="button"
+                                    className="w-fit"
+                                    onClick={() => {
+                                        const titleValue = form.getValues('title');
 
-                                    const slug = slugify(titleValue);
+                                        const slug = slugify(titleValue);
 
-                                    form.setValue("slug", slug, { shouldValidate: true })
-                                }}>
+                                        form.setValue('slug', slug, { shouldValidate: true });
+                                    }}
+                                >
                                     Generate Slug <SparklesIcon className="ml-1" size={16} />
                                 </Button>
                             </div>
@@ -109,7 +132,11 @@ export default function CourseCreatePage() {
                                     <FormItem className="w-full">
                                         <FormLabel>Small Description</FormLabel>
                                         <FormControl>
-                                            <Textarea placeholder="Small Description" className="min-h-[120px]" {...field} />
+                                            <Textarea
+                                                placeholder="Small Description"
+                                                className="min-h-[120px]"
+                                                {...field}
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -124,9 +151,6 @@ export default function CourseCreatePage() {
                                         <FormLabel>Description</FormLabel>
                                         <FormControl>
                                             <RichTextEditor field={field} />
-                                            {/**
-                                            <Textarea placeholder="Description" className="min-h-[120px]" {...field} />
-                                             */}
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -140,15 +164,17 @@ export default function CourseCreatePage() {
                                     <FormItem className="w-full">
                                         <FormLabel>Thumbnail Image</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Thumbnail url" {...field} />
+                                            <Uploader
+                                                onChange={field.onChange}
+                                                value={field.value}
+                                            />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
                                 )}
                             />
 
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
+                            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                                 <FormField
                                     control={form.control}
                                     name="category"
@@ -229,7 +255,7 @@ export default function CourseCreatePage() {
                                 />
                                 <FormField
                                     control={form.control}
-                                    name="Price"
+                                    name="price"
                                     render={({ field }) => (
                                         <FormItem className="w-full">
                                             <FormLabel>Price ($)</FormLabel>
@@ -262,10 +288,7 @@ export default function CourseCreatePage() {
                                             </FormControl>
                                             <SelectContent>
                                                 {coursesStatus.map((categories) => (
-                                                    <SelectItem
-                                                        key={categories}
-                                                        value={categories}
-                                                    >
+                                                    <SelectItem key={categories} value={categories}>
                                                         {categories}
                                                     </SelectItem>
                                                 ))}
@@ -275,7 +298,7 @@ export default function CourseCreatePage() {
                                     </FormItem>
                                 )}
                             />
-                            <Button >
+                            <Button>
                                 Create Course <PlusIcon className="ml-1" size={16} />
                             </Button>
                         </form>
@@ -283,5 +306,5 @@ export default function CourseCreatePage() {
                 </CardContent>
             </Card>
         </>
-    )
+    );
 }

@@ -1,5 +1,9 @@
 # arch-lms
 
+## Rewrites
+
+- [ ] use uploadthing instead of tigris
+
 ## TODO
 
 - [x] add google OAuth
@@ -11,7 +15,7 @@
 - [x] create admin dashboard
 - [ ] add course creation
 - [ ] create/add text editor
-- [ ] file upload
+- [x] file upload
 - [ ] file deletion
 - [ ] create public facing course page
 - [ ] course editing functionality
