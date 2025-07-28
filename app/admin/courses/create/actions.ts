@@ -38,7 +38,17 @@ export async function CreateCourse(data: CourseSchemaType): Promise<ApiResponse>
             status: 'success',
             message: 'Course Created Successfully',
         };
-    } catch {
+    } catch (error) {
+        console.error('Course creation failed:', error);
+
+        // Handle specific Prisma errors
+        if (error instanceof Error && error.message.includes('Unique constraint')) {
+            return {
+                status: 'error',
+                message: 'A course with this slug already exists',
+            };
+        }
+
         return {
             status: 'error',
             message: 'Failed to create course',
