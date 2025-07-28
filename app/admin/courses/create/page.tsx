@@ -23,18 +23,26 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowLeft, Loader2, PlusIcon, SparklesIcon } from 'lucide-react';
 import { RichTextEditor } from '@/components/rich-text-editor/Editor';
-import { ArrowLeft, PlusIcon, SparklesIcon } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Uploader } from '@/components/file-uploader/uploader';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
+import { tryCatch } from '@/hooks/try-catch';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
+import { CreateCourse } from './actions';
+import { useTransition } from 'react';
+import { toast } from 'sonner';
 import slugify from 'slugify';
 import Link from 'next/link';
 
 export default function CourseCreatePage() {
+    const [pending, startTransition] = useTransition();
+    const router = useRouter();
+
     // 1. Define your form.
     const form = useForm<CourseSchemaType>({
         resolver: zodResolver(courseSchema),
@@ -54,9 +62,21 @@ export default function CourseCreatePage() {
 
     // 2. Define a submit handler.
     function onSubmit(values: CourseSchemaType) {
-        // Do something with the form values.
-        // ✅ This will be type-safe and validated.
-        console.log(values);
+        startTransition(async () => {
+            const { data: result, error } = await tryCatch(CreateCourse(values));
+
+            if (error) {
+                toast.error('An unexpected error occurred. Please try again later.');
+            }
+
+            if (result?.status === 'success') {
+                toast.success(result.message);
+                form.reset();
+                router.push('/admin/courses');
+            } else if (result?.status === 'error') {
+                toast.error(result.message);
+            }
+        });
     }
     return (
         <>
@@ -298,8 +318,17 @@ export default function CourseCreatePage() {
                                     </FormItem>
                                 )}
                             />
-                            <Button>
-                                Create Course <PlusIcon className="ml-1" size={16} />
+                            <Button type="submit" disabled={pending}>
+                                {pending ? (
+                                    <>
+                                        Creating...
+                                        <Loader2 className="ml-1 animate-spin" />
+                                    </>
+                                ) : (
+                                    <>
+                                        Create Course <PlusIcon className="ml-1" size={16} />
+                                    </>
+                                )}
                             </Button>
                         </form>
                     </Form>
