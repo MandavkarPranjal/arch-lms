@@ -1,8 +1,7 @@
-import { ChartAreaInteractive } from "@/components/sidebar/chart-area-interactive";
-import { DataTable } from "@/components/sidebar/data-table";
-import { SectionCards } from "@/components/sidebar/section-cards";
-
-import data from "./data.json"
+import { ChartAreaInteractive } from '@/components/sidebar/chart-area-interactive';
+import { SectionCards } from '@/components/sidebar/section-cards';
+import { DataTable } from '@/components/sidebar/data-table';
+import data from './data.json';
 
 export default function adminIndexPage() {
     return (
@@ -13,5 +12,5 @@ export default function adminIndexPage() {
             </div>
             <DataTable data={data} />
         </div>
-    )
+    );
 }
