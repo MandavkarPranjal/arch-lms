@@ -1,3 +1,5 @@
+import { requireAdmin } from '@/app/data/admin/require-admin';
+import arcjet, { detectBot, fixedWindow } from '@/lib/arcjet';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { NextResponse } from 'next/server';
@@ -5,6 +7,21 @@ import { S3 } from '@/lib/S3Client';
 import { v4 as uuidv4 } from 'uuid';
 import { env } from '@/lib/env';
 import z from 'zod/v3';
+
+const aj = arcjet
+    .withRule(
+        detectBot({
+            mode: 'LIVE',
+            allow: [],
+        }),
+    )
+    .withRule(
+        fixedWindow({
+            mode: 'LIVE',
+            window: '1m',
+            max: 5,
+        }),
+    );
 
 export const fileUploadSchema = z.object({
     fileName: z.string().min(1, { message: 'File name is required' }),
@@ -14,7 +31,21 @@ export const fileUploadSchema = z.object({
 });
 
 export async function POST(request: Request) {
+    const session = await requireAdmin();
+
     try {
+        const decision = await aj.protect(request, {
+            fingerprint: session.user.id,
+        });
+
+        if (decision.isDenied()) {
+            if (decision.reason.isRateLimit()) {
+                return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
+            } else {
+                return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+            }
+        }
+
         const body = await request.json();
 
         const validation = fileUploadSchema.safeParse(body);

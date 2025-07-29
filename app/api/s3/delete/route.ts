@@ -1,10 +1,39 @@
+import { requireAdmin } from '@/app/data/admin/require-admin';
+import arcjet, { detectBot, fixedWindow } from '@/lib/arcjet';
 import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { NextResponse } from 'next/server';
 import { S3 } from '@/lib/S3Client';
 import { env } from '@/lib/env';
 
+const aj = arcjet
+    .withRule(
+        detectBot({
+            mode: 'LIVE',
+            allow: [],
+        }),
+    )
+    .withRule(
+        fixedWindow({
+            mode: 'LIVE',
+            window: '1m',
+            max: 5,
+        }),
+    );
 export async function DELETE(request: Request) {
+    const session = await requireAdmin();
     try {
+        const decision = await aj.protect(request, {
+            fingerprint: session?.user.id as string,
+        });
+
+        if (decision.isDenied()) {
+            if (decision.reason.isRateLimit()) {
+                return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
+            } else {
+                return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+            }
+        }
+
         const body = await request.json();
 
         const key = body.key;

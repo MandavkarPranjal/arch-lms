@@ -1,8 +1,7 @@
-import 'server-only';
-
 import { prismaAdapter } from 'better-auth/adapters/prisma';
 import { emailOTP } from 'better-auth/plugins';
 import OtpEmail from '@/components/email/otp';
+import { admin } from 'better-auth/plugins';
 import { betterAuth } from 'better-auth';
 import { resend } from './resend';
 import { prisma } from './db';
@@ -32,5 +31,6 @@ export const auth = betterAuth({
                 });
             },
         }),
+        admin(),
     ],
 });
