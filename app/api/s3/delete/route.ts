@@ -3,7 +3,6 @@ import { DeleteObjectCommand } from '@aws-sdk/client-s3';
 import { NextResponse } from 'next/server';
 import { headers } from 'next/headers';
 import { S3 } from '@/lib/S3Client';
-import { auth } from '@/lib/auth';
 import { env } from '@/lib/env';
 
 const aj = arcjet
@@ -21,9 +20,7 @@ const aj = arcjet
         }),
     );
 export async function DELETE(request: Request) {
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    });
+    const session = await requireAdmin();
     try {
         const decision = await aj.protect(request, {
             fingerprint: session?.user.id as string,
