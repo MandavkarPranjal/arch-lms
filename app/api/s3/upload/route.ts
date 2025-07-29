@@ -1,11 +1,10 @@
+import { requireAdmin } from '@/app/data/admin/require-admin';
 import arcjet, { detectBot, fixedWindow } from '@/lib/arcjet';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { NextResponse } from 'next/server';
-import { headers } from 'next/headers';
 import { S3 } from '@/lib/S3Client';
 import { v4 as uuidv4 } from 'uuid';
-import { auth } from '@/lib/auth';
 import { env } from '@/lib/env';
 import z from 'zod/v3';
 
@@ -32,9 +31,8 @@ export const fileUploadSchema = z.object({
 });
 
 export async function POST(request: Request) {
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    });
+    const session = await requireAdmin();
+
     try {
         const decision = await aj.protect(request, {
             fingerprint: session?.user.id as string,
