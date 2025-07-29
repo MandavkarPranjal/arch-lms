@@ -35,11 +35,15 @@ export async function POST(request: Request) {
 
     try {
         const decision = await aj.protect(request, {
-            fingerprint: session?.user.id as string,
+            fingerprint: session.user.id,
         });
 
         if (decision.isDenied()) {
-            return NextResponse.json({ error: 'Access denied' }, { status: 429 });
+            if (decision.reason.isRateLimit()) {
+                return NextResponse.json({ error: 'Rate limit exceeded' }, { status: 429 });
+            } else {
+                return NextResponse.json({ error: 'Access denied' }, { status: 403 });
+            }
         }
 
         const body = await request.json();
