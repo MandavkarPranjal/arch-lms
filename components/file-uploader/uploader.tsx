@@ -6,6 +6,7 @@ import {
     RenderUploadedState,
     RenderUploadingState,
 } from './render-state';
+import { useConstructUrl } from '@/hooks/use-construct-url';
 import { FileRejection, useDropzone } from 'react-dropzone';
 import { useCallback, useEffect, useState } from 'react';
 import { Card, CardContent } from '../ui/card';
@@ -31,6 +32,7 @@ interface AppProps {
 }
 
 export function Uploader({ onChange, value }: AppProps) {
+    const fileUrl = useConstructUrl(value || '');
     const [fileState, setFileState] = useState<UploaderState>({
         error: false,
         file: null,
@@ -40,6 +42,7 @@ export function Uploader({ onChange, value }: AppProps) {
         isDeleting: false,
         fileType: 'image',
         key: value,
+        objectUrl: fileUrl,
     });
 
     async function uploadFile(file: File) {
