@@ -24,6 +24,7 @@ import { AdminGetSingularCourse } from '@/app/data/admin/admin-get-course';
 import { reorderChapters, reorderLessons } from '../actions';
 import { ReactNode, useEffect, useState } from 'react';
 import { NewChapterModal } from './newChapterModal';
+import { NewLessonModal } from './newLessonModal';
 import { Button } from '@/components/ui/button';
 import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils';
@@ -362,12 +363,10 @@ export function CourseStructure({ data }: AppProps) {
                                                         ))}
                                                     </SortableContext>
                                                     <div className="p-2">
-                                                        <Button
-                                                            variant="outline"
-                                                            className="w-full"
-                                                        >
-                                                            Create New Lesson
-                                                        </Button>
+                                                        <NewLessonModal
+                                                            chapterId={item.id}
+                                                            courseId={data.id}
+                                                        />
                                                     </div>
                                                 </div>
                                             </CollapsibleContent>

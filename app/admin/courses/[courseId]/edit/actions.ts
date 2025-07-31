@@ -1,6 +1,13 @@
 'use server';
 
-import { chapterSchema, ChapterSchemeType, courseSchema, CourseSchemaType } from '@/lib/zodSchemas';
+import {
+    chapterSchema,
+    ChapterSchemeType,
+    courseSchema,
+    CourseSchemaType,
+    lessonSchema,
+    LessonSchemaType,
+} from '@/lib/zodSchemas';
 import { requireAdmin } from '@/app/data/admin/require-admin';
 import arcjet, { detectBot, fixedWindow } from '@/lib/arcjet';
 import { revalidatePath } from 'next/cache';
@@ -205,6 +212,59 @@ export async function createChapter(values: ChapterSchemeType): Promise<ApiRespo
         return {
             status: 'error',
             message: 'Failed to create chapter',
+        };
+    }
+}
+
+export async function createLesson(values: LessonSchemaType): Promise<ApiResponse> {
+    await requireAdmin();
+
+    try {
+        const result = lessonSchema.safeParse(values);
+
+        if (!result.success) {
+            return {
+                status: 'error',
+                message: 'Invalid data',
+            };
+        }
+
+        await prisma.$transaction(async (tx) => {
+            const maxPosition = await tx.lesson.findFirst({
+                where: {
+                    chapterId: result.data.chapterId,
+                },
+                select: {
+                    position: true,
+                },
+                orderBy: {
+                    position: 'desc',
+                },
+            });
+
+            await tx.lesson.create({
+                data: {
+                    title: result.data.name,
+                    description: result.data.description,
+                    videoKey: result.data.videoKey,
+                    notesKey: result.data.notesKey,
+                    thumbnailKey: result.data.thumbnailKey,
+                    chapterId: result.data.chapterId,
+                    position: (maxPosition?.position ?? 0) + 1,
+                },
+            });
+        });
+
+        revalidatePath(`/admin/courses/${result.data.courseId}/edit`);
+
+        return {
+            status: 'success',
+            message: 'Lesson created successfully',
+        };
+    } catch {
+        return {
+            status: 'error',
+            message: 'Failed to create lesson',
         };
     }
 }
