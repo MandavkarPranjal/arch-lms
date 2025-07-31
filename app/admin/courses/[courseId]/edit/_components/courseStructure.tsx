@@ -26,7 +26,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { NewChapterModal } from './newChapterModal';
 import { NewLessonModal } from './newLessonModal';
 import { Button } from '@/components/ui/button';
-import { DeleteLesson } from './deletelesson';
+import { DeleteLesson } from './deleteLesson';
 import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
