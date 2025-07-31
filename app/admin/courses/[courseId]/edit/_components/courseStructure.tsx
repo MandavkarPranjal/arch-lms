@@ -23,6 +23,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AdminGetSingularCourse } from '@/app/data/admin/admin-get-course';
 import { reorderChapters, reorderLessons } from '../actions';
 import { ReactNode, useEffect, useState } from 'react';
+import { NewChapterModal } from './newChapterModal';
 import { Button } from '@/components/ui/button';
 import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils';
@@ -271,6 +272,7 @@ export function CourseStructure({ data }: AppProps) {
             <Card>
                 <CardHeader className="border-border flex flex-row items-center justify-between border-b">
                     <CardTitle>Chapters</CardTitle>
+                    <NewChapterModal courseId={data.id} />
                 </CardHeader>
                 <CardContent className="space-y-8">
                     <SortableContext strategy={verticalListSortingStrategy} items={items}>
