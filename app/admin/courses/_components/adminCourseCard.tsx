@@ -56,7 +56,7 @@ export function AdminCourseCard({ data }: AppProps) {
             </div>
             <Image
                 src={thumbnailUrl}
-                alt="Thumbnail Url"
+                alt={`${data.title} thumbnail`}
                 width={600}
                 height={400}
                 className="aspect-video h-full w-full rounded-t-lg object-cover"
