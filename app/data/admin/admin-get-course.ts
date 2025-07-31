@@ -37,7 +37,13 @@ export async function adminGetCourse(id: string) {
                             NotesKey: true,
                             position: true,
                         },
+                        orderBy: {
+                            position: 'asc',
+                        },
                     },
+                },
+                orderBy: {
+                    position: 'asc',
                 },
             },
         },
