@@ -26,6 +26,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { NewChapterModal } from './newChapterModal';
 import { NewLessonModal } from './newLessonModal';
 import { Button } from '@/components/ui/button';
+import { DeleteLesson } from './deletelesson';
 import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -351,12 +352,11 @@ export function CourseStructure({ data }: AppProps) {
                                                                             </Link>
                                                                         </div>
 
-                                                                        <Button
-                                                                            size="icon"
-                                                                            variant="outline"
-                                                                        >
-                                                                            <Trash2 className="size-4" />
-                                                                        </Button>
+                                                                        <DeleteLesson
+                                                                            chapterId={item.id}
+                                                                            courseId={data.id}
+                                                                            lessonId={lesson.id}
+                                                                        />
                                                                     </div>
                                                                 )}
                                                             </SortableItem>
