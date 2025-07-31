@@ -18,7 +18,7 @@ import {
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, ChevronRight, FileText, GripVertical, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, FileText, GripVertical } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AdminGetSingularCourse } from '@/app/data/admin/admin-get-course';
 import { reorderChapters, reorderLessons } from '../actions';
@@ -26,6 +26,7 @@ import { ReactNode, useEffect, useState } from 'react';
 import { NewChapterModal } from './newChapterModal';
 import { NewLessonModal } from './newLessonModal';
 import { Button } from '@/components/ui/button';
+import { DeleteChapter } from './deleteChapter';
 import { DeleteLesson } from './deleteLesson';
 import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils';
@@ -312,9 +313,10 @@ export function CourseStructure({ data }: AppProps) {
                                                         {item.title}
                                                     </p>
                                                 </div>
-                                                <Button size="icon" variant="outline">
-                                                    <Trash2 className="size-4" />
-                                                </Button>
+                                                <DeleteChapter
+                                                    chapterId={item.id}
+                                                    courseId={data.id}
+                                                />
                                             </div>
 
                                             <CollapsibleContent>
