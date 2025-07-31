@@ -186,9 +186,9 @@ export function EditCourseForm({ data }: AppProps) {
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
-                                        {courseCategories.map((categories) => (
-                                            <SelectItem key={categories} value={categories}>
-                                                {categories}
+                                        {courseCategories.map((category) => (
+                                            <SelectItem key={category} value={category}>
+                                                {category}
                                             </SelectItem>
                                         ))}
                                     </SelectContent>
