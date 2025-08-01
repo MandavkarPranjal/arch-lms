@@ -2,7 +2,7 @@
 
 import {
     chapterSchema,
-    ChapterSchemeType,
+    ChapterSchemaType,
     courseSchema,
     CourseSchemaType,
     lessonSchema,
@@ -167,7 +167,7 @@ export async function reorderChapters(
     }
 }
 
-export async function createChapter(values: ChapterSchemeType): Promise<ApiResponse> {
+export async function createChapter(values: ChapterSchemaType): Promise<ApiResponse> {
     await requireAdmin();
 
     try {

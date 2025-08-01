@@ -67,5 +67,5 @@ export const lessonSchema = z.object({
 });
 
 export type CourseSchemaType = z.infer<typeof courseSchema>;
-export type ChapterSchemeType = z.infer<typeof chapterSchema>;
+export type ChapterSchemaType = z.infer<typeof chapterSchema>;
 export type LessonSchemaType = z.infer<typeof lessonSchema>;

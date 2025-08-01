@@ -15,7 +15,7 @@ import {
     FormLabel,
     FormMessage,
 } from '@/components/ui/form';
-import { chapterSchema, ChapterSchemeType } from '@/lib/zodSchemas';
+import { chapterSchema, ChapterSchemaType } from '@/lib/zodSchemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { useState, useTransition } from 'react';
@@ -30,7 +30,7 @@ export function NewChapterModal({ courseId }: { courseId: string }) {
     const [isOpen, setIsOpen] = useState(false);
     const [pending, startTransition] = useTransition();
 
-    const form = useForm<ChapterSchemeType>({
+    const form = useForm<ChapterSchemaType>({
         resolver: zodResolver(chapterSchema),
         defaultValues: {
             name: '',
@@ -38,7 +38,7 @@ export function NewChapterModal({ courseId }: { courseId: string }) {
         },
     });
 
-    async function onSubmit(values: ChapterSchemeType) {
+    async function onSubmit(values: ChapterSchemaType) {
         startTransition(async () => {
             const { data: result, error } = await tryCatch(createChapter(values));
 
