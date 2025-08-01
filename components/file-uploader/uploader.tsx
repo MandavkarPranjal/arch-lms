@@ -23,13 +23,13 @@ interface UploaderState {
     isDeleting: boolean;
     error: boolean;
     objectUrl?: string;
-    fileType: 'image' | 'video' | 'file';
+    fileType: 'image' | 'video' | 'document';
 }
 
 interface AppProps {
     value?: string;
     onChange?: (value: string) => void;
-    fileTypeAccepted: 'image' | 'video' | 'file';
+    fileTypeAccepted: 'image' | 'video' | 'document';
 }
 
 export function Uploader({ onChange, value, fileTypeAccepted }: AppProps) {
@@ -230,12 +230,35 @@ export function Uploader({ onChange, value, fileTypeAccepted }: AppProps) {
                 (rejection) => rejection.errors[0].code === 'file-too-large',
             );
 
+            const fileTypeInvalid = fileRejection.find(
+                (rejection) => rejection.errors[0].code === 'file-invalid-type',
+            );
+
             if (fileSizeTooBig) {
-                toast.error('File Size exceeds the limit');
+                const maxSize = fileTypeAccepted === 'document' ? '50MB' : '5MB';
+                toast.error(`File size exceeds the ${maxSize} limit`);
             }
 
             if (toManyFiles) {
                 toast.error('Too many files selected, max is 1');
+            }
+
+            if (fileTypeInvalid) {
+                let supportedTypes = '';
+                switch (fileTypeAccepted) {
+                    case 'image':
+                        supportedTypes = 'JPG, PNG, GIF, WebP';
+                        break;
+                    case 'video':
+                        supportedTypes = 'MP4, WebM, AVI, MOV';
+                        break;
+                    case 'document':
+                        supportedTypes = 'PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, TXT';
+                        break;
+                    default:
+                        supportedTypes = 'supported file types';
+                }
+                toast.error(`File type not supported. Please upload: ${supportedTypes}`);
             }
         }
     }
@@ -265,7 +288,7 @@ export function Uploader({ onChange, value, fileTypeAccepted }: AppProps) {
             );
         }
 
-        return <RenderEmptyState isDragActive={isDragActive} />;
+        return <RenderEmptyState isDragActive={isDragActive} fileTypeAccepted={fileTypeAccepted} />;
     }
 
     useEffect(() => {
@@ -278,10 +301,29 @@ export function Uploader({ onChange, value, fileTypeAccepted }: AppProps) {
 
     const { getRootProps, getInputProps, isDragActive } = useDropzone({
         onDrop,
-        accept: fileTypeAccepted === 'video' ? { 'video/*': [] } : { 'image/*': [] },
+        accept:
+            fileTypeAccepted === 'video'
+                ? { 'video/*': [] }
+                : fileTypeAccepted === 'document'
+                  ? {
+                        'application/pdf': ['.pdf'],
+                        'application/msword': ['.doc'],
+                        'application/vnd.openxmlformats-officedocument.wordprocessingml.document': [
+                            '.docx',
+                        ],
+                        'application/vnd.ms-powerpoint': ['.ppt'],
+                        'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+                            ['.pptx'],
+                        'application/vnd.ms-excel': ['.xls'],
+                        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': [
+                            '.xlsx',
+                        ],
+                        'text/plain': ['.txt'],
+                    }
+                  : { 'image/*': [] },
         maxFiles: 1,
         multiple: false,
-        maxSize: 5 * 1024 * 1024, // 5MB of max file size
+        maxSize: fileTypeAccepted === 'document' ? 50 * 1024 * 1024 : 5 * 1024 * 1024, // 50MB for documents, 5MB for others
         onDropRejected: rejectFiles,
         disabled: fileState.uploading || !!fileState.objectUrl,
     });

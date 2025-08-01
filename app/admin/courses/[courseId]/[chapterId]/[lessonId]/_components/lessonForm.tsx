@@ -16,8 +16,12 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { Uploader } from '@/components/file-uploader/uploader';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@/components/ui/input';
+import { tryCatch } from '@/hooks/try-catch';
 import { useForm } from 'react-hook-form';
+import { updateLesson } from '../actions';
 import { ArrowLeft } from 'lucide-react';
+import { useTransition } from 'react';
+import { toast } from 'sonner';
 import Link from 'next/link';
 
 interface AppProps {
@@ -27,6 +31,8 @@ interface AppProps {
 }
 
 export function LessonForm({ chapterId, courseId, data }: AppProps) {
+    const [pending, startTransition] = useTransition();
+
     const form = useForm<LessonSchemaType>({
         resolver: zodResolver(lessonSchema),
         defaultValues: {
@@ -39,6 +45,22 @@ export function LessonForm({ chapterId, courseId, data }: AppProps) {
             notesKey: data.notesKey ?? undefined,
         },
     });
+
+    async function onSubmit(values: LessonSchemaType) {
+        startTransition(async () => {
+            const { data: result, error } = await tryCatch(updateLesson(values, data.id));
+
+            if (error) {
+                toast.error('An unexpected error occurred. Please try again later.');
+            }
+
+            if (result?.status === 'success') {
+                toast.success(result.message);
+            } else if (result?.status === 'error') {
+                toast.error(result.message);
+            }
+        });
+    }
 
     return (
         <div>
@@ -62,7 +84,7 @@ export function LessonForm({ chapterId, courseId, data }: AppProps) {
                 </CardHeader>
                 <CardContent>
                     <Form {...form}>
-                        <form className="space-y-6">
+                        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                             <FormField
                                 control={form.control}
                                 name="name"
@@ -70,7 +92,7 @@ export function LessonForm({ chapterId, courseId, data }: AppProps) {
                                     <FormItem>
                                         <FormLabel>Lesson Name</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Lesson Name" {...field} />
+                                            <Input placeholder="Lesson Name" {...field.field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -83,7 +105,7 @@ export function LessonForm({ chapterId, courseId, data }: AppProps) {
                                     <FormItem>
                                         <FormLabel>Description</FormLabel>
                                         <FormControl>
-                                            <RichTextEditor field={field} />
+                                            <RichTextEditor field={field.field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -97,8 +119,8 @@ export function LessonForm({ chapterId, courseId, data }: AppProps) {
                                         <FormLabel>Thumbnail Image</FormLabel>
                                         <FormControl>
                                             <Uploader
-                                                onChange={field.onChange}
-                                                value={field.value}
+                                                onChange={field.field.onChange}
+                                                value={field.field.value}
                                                 fileTypeAccepted="image"
                                             />
                                         </FormControl>
@@ -114,8 +136,8 @@ export function LessonForm({ chapterId, courseId, data }: AppProps) {
                                         <FormLabel>Video File</FormLabel>
                                         <FormControl>
                                             <Uploader
-                                                onChange={field.onChange}
-                                                value={field.value}
+                                                onChange={field.field.onChange}
+                                                value={field.field.value}
                                                 fileTypeAccepted="video"
                                             />
                                         </FormControl>
@@ -128,12 +150,12 @@ export function LessonForm({ chapterId, courseId, data }: AppProps) {
                                 name="notesKey"
                                 render={(field) => (
                                     <FormItem>
-                                        <FormLabel>Video File</FormLabel>
+                                        <FormLabel>Notes File</FormLabel>
                                         <FormControl>
                                             <Uploader
-                                                onChange={field.onChange}
-                                                value={field.value}
-                                                fileTypeAccepted="file"
+                                                onChange={field.field.onChange}
+                                                value={field.field.value}
+                                                fileTypeAccepted="document"
                                             />
                                         </FormControl>
                                         <FormMessage />
@@ -141,7 +163,9 @@ export function LessonForm({ chapterId, courseId, data }: AppProps) {
                                 )}
                             />
 
-                            <Button type="submit">Save Lesson</Button>
+                            <Button type="submit" disabled={pending}>
+                                {pending ? 'Saving...' : 'Save Lesson'}
+                            </Button>
                         </form>
                     </Form>
                 </CardContent>

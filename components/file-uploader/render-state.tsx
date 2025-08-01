@@ -1,16 +1,37 @@
-import { CloudUploadIcon, ImageIcon, Loader2, XIcon } from 'lucide-react';
+import { CloudUploadIcon, FileTextIcon, FileIcon, ImageIcon, Loader2, XIcon } from 'lucide-react';
 import { Button } from '../ui/button';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 
-export function RenderEmptyState({ isDragActive }: { isDragActive: boolean }) {
+export function RenderEmptyState({
+    isDragActive,
+    fileTypeAccepted,
+}: {
+    isDragActive: boolean;
+    fileTypeAccepted?: 'image' | 'video' | 'document';
+}) {
+    const getFileTypeText = () => {
+        switch (fileTypeAccepted) {
+            case 'image':
+                return 'images';
+            case 'video':
+                return 'videos';
+            case 'document':
+                return 'documents (PDF, DOC, PPT, XLS, TXT)';
+            default:
+                return 'files';
+        }
+    };
+
     return (
         <div className="text-center">
             {isDragActive && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center">
                     <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" />
                     <div className="animate-in fade-in zoom-in relative flex h-[90%] w-[90%] transform items-center justify-center transition-all duration-200 ease-out">
-                        <p className="text-primary text-2xl font-semibold">Drop your file here</p>
+                        <p className="text-primary text-2xl font-semibold">
+                            Drop your {getFileTypeText()} here
+                        </p>
                     </div>
                 </div>
             )}
@@ -18,11 +39,11 @@ export function RenderEmptyState({ isDragActive }: { isDragActive: boolean }) {
                 <CloudUploadIcon className={cn('text-muted-foreground size-6')} />
             </div>
             <p className="text-foreground text-base font-semibold">
-                Drop your files here or{' '}
+                Drop your {getFileTypeText()} here or{' '}
                 <span className="text-primary cursor-pointer font-bold">Click to upload</span>
             </p>
             <Button type="button" className="mt-4">
-                Select Files
+                Select {fileTypeAccepted === 'document' ? 'Document' : 'Files'}
             </Button>
         </div>
     );
@@ -54,12 +75,49 @@ export function RenderUploadedState({
     previewUrl: string;
     isDeleting: boolean;
     handleRemoveFile: () => void;
-    fileType: 'image' | 'video' | 'file';
+    fileType: 'image' | 'video' | 'document';
 }) {
+    const getFileExtension = (url: string) => {
+        return url.split('.').pop()?.toLowerCase() || '';
+    };
+
+    const getDocumentIcon = (extension: string) => {
+        if (['pdf'].includes(extension)) {
+            return <FileTextIcon className="size-16 text-red-500" />;
+        }
+        if (['doc', 'docx'].includes(extension)) {
+            return <FileTextIcon className="size-16 text-blue-500" />;
+        }
+        if (['ppt', 'pptx'].includes(extension)) {
+            return <FileTextIcon className="size-16 text-orange-500" />;
+        }
+        if (['xls', 'xlsx'].includes(extension)) {
+            return <FileTextIcon className="size-16 text-green-500" />;
+        }
+        return <FileIcon className="size-16 text-gray-500" />;
+    };
+
+    const renderDocumentPreview = () => {
+        const extension = getFileExtension(previewUrl);
+        const fileName = previewUrl.split('/').pop() || 'Document';
+
+        return (
+            <div className="flex flex-col items-center justify-center space-y-4">
+                {getDocumentIcon(extension)}
+                <div className="text-center">
+                    <p className="max-w-[200px] truncate text-sm font-medium">{fileName}</p>
+                    <p className="text-muted-foreground text-xs uppercase">{extension} file</p>
+                </div>
+            </div>
+        );
+    };
+
     return (
         <div className="group relative flex h-full w-full items-center justify-center">
             {fileType === 'video' ? (
                 <video src={previewUrl} controls className="h-full w-full rounded-md" />
+            ) : fileType === 'document' ? (
+                renderDocumentPreview()
             ) : (
                 <Image src={previewUrl} alt="uploaded file" fill className="object-contain p-2" />
             )}
