@@ -27,7 +27,7 @@ export default function DeleteCourseRoute() {
             try {
                 const courseData = await getCourseForDeletion(courseId);
                 setCourse({ id: courseData.id, title: courseData.title });
-            } catch (error) {
+            } catch {
                 toast.error('Failed to load course data');
                 router.push('/admin/courses');
             } finally {
