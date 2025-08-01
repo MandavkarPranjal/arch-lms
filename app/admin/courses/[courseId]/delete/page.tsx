@@ -86,7 +86,8 @@ export default function DeleteCourseRoute() {
                     </CardDescription>
                     <Alert variant="destructive" className="bg-destructive/15">
                         <AlertTitle>
-                            <span className="font-bold">Waring: </span>This action cannot be undone.
+                            <span className="font-bold">Warning: </span>This action cannot be
+                            undone.
                         </AlertTitle>
                     </Alert>
                 </CardHeader>
