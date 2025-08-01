@@ -8,7 +8,6 @@ import {
 } from '@/components/ui/navigation-menu';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { Button, buttonVariants } from '@/components/ui/button';
-import { ThemeProvider } from '@/components/theme-provider';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { authClient } from '@/lib/auth-client';
 import { UserDropdown } from './userDropdown';
@@ -114,9 +113,7 @@ export function Navbar() {
                  <div className="flex items-center space-x-4">
                  */}
                 <div className="flex items-center space-x-4">
-                    <ThemeProvider defaultTheme="dark">
-                        <ThemeToggle />
-                    </ThemeProvider>
+                    <ThemeToggle />
 
                     {isPending ? null : session ? (
                         <UserDropdown
