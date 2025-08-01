@@ -29,6 +29,7 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { Uploader } from '@/components/file-uploader/uploader';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Textarea } from '@/components/ui/textarea';
+import { useConfetti } from '@/hooks/use-confetti';
 import { Input } from '@/components/ui/input';
 import { tryCatch } from '@/hooks/try-catch';
 import { useRouter } from 'next/navigation';
@@ -42,6 +43,7 @@ import Link from 'next/link';
 export default function CourseCreatePage() {
     const [pending, startTransition] = useTransition();
     const router = useRouter();
+    const { triggerConfetti } = useConfetti();
 
     // 1. Define your form.
     const form = useForm<CourseSchemaType>({
@@ -71,6 +73,7 @@ export default function CourseCreatePage() {
 
             if (result?.status === 'success') {
                 toast.success(result.message);
+                triggerConfetti();
                 form.reset();
                 router.push('/admin/courses');
             } else if (result?.status === 'error') {
