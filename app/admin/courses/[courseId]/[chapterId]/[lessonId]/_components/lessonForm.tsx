@@ -88,11 +88,11 @@ export function LessonForm({ chapterId, courseId, data }: AppProps) {
                             <FormField
                                 control={form.control}
                                 name="name"
-                                render={(field) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Lesson Name</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="Lesson Name" {...field.field} />
+                                            <Input placeholder="Lesson Name" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -101,11 +101,11 @@ export function LessonForm({ chapterId, courseId, data }: AppProps) {
                             <FormField
                                 control={form.control}
                                 name="description"
-                                render={(field) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Description</FormLabel>
                                         <FormControl>
-                                            <RichTextEditor field={field.field} />
+                                            <RichTextEditor field={field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -114,13 +114,13 @@ export function LessonForm({ chapterId, courseId, data }: AppProps) {
                             <FormField
                                 control={form.control}
                                 name="thumbnailKey"
-                                render={(field) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Thumbnail Image</FormLabel>
                                         <FormControl>
                                             <Uploader
-                                                onChange={field.field.onChange}
-                                                value={field.field.value}
+                                                onChange={field.onChange}
+                                                value={field.value}
                                                 fileTypeAccepted="image"
                                             />
                                         </FormControl>
@@ -131,13 +131,13 @@ export function LessonForm({ chapterId, courseId, data }: AppProps) {
                             <FormField
                                 control={form.control}
                                 name="videoKey"
-                                render={(field) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Video File</FormLabel>
                                         <FormControl>
                                             <Uploader
-                                                onChange={field.field.onChange}
-                                                value={field.field.value}
+                                                onChange={field.onChange}
+                                                value={field.value}
                                                 fileTypeAccepted="video"
                                             />
                                         </FormControl>
@@ -148,13 +148,13 @@ export function LessonForm({ chapterId, courseId, data }: AppProps) {
                             <FormField
                                 control={form.control}
                                 name="notesKey"
-                                render={(field) => (
+                                render={({ field }) => (
                                     <FormItem>
                                         <FormLabel>Notes File</FormLabel>
                                         <FormControl>
                                             <Uploader
-                                                onChange={field.field.onChange}
-                                                value={field.field.value}
+                                                onChange={field.onChange}
+                                                value={field.value}
                                                 fileTypeAccepted="document"
                                             />
                                         </FormControl>
