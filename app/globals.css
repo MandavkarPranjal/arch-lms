@@ -179,7 +179,8 @@ html {
   transition: color-scheme 0.3s ease-in-out;
 }
 
-* {
+body,
+.theme-transition {
   transition:
     background-color 0.1s ease-in-out,
     border-color 0.1s ease-in-out,
