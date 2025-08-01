@@ -8,10 +8,10 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { deleteChapter, deleteLesson } from '../actions';
 import { Button } from '@/components/ui/button';
 import { useState, useTransition } from 'react';
 import { tryCatch } from '@/hooks/try-catch';
+import { deleteChapter } from '../actions';
 import { Trash2 } from 'lucide-react';
 import { toast } from 'sonner';
 
