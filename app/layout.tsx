@@ -31,7 +31,12 @@ export default function RootLayout({
                     dangerouslySetInnerHTML={{
                         __html: `
                             (function() {
-                                const theme = localStorage.getItem('theme') || 'dark';
+                                try {
+                                    const theme = localStorage.getItem('theme') || 'dark';
+                                    if (theme !== 'dark' && theme !== 'light') {
+                                        localStorage.setItem('theme', 'dark');
+                                        theme = 'dark';
+                                    }
                                 const root = document.documentElement;
                                 root.classList.add('disable-transitions');
                                 if (theme === 'dark') {
@@ -40,6 +45,11 @@ export default function RootLayout({
                                 } else {
                                     root.classList.remove('dark');
                                     root.style.colorScheme = 'light';
+                                }
+                                } catch (e) {
+                                    // Fallback if localStorage is unavailable
+                                    document.documentElement.classList.add('dark');
+                                    document.documentElement.style.colorScheme = 'dark';
                                 }
                             })();
                         `,
