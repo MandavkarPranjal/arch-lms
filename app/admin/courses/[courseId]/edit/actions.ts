@@ -338,7 +338,7 @@ export async function deleteLesson({
 
         return {
             status: 'success',
-            message: 'Lesson deleted and position reorderd successfully',
+            message: 'Lesson deleted and position reordered successfully',
         };
     } catch {
         return {
