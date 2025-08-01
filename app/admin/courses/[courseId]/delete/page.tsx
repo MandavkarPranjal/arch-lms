@@ -1,13 +1,13 @@
 'use client';
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2, MessageCircleWarning, Trash2 } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { deleteCourse, getCourseForDeletion } from './actions';
 import { useState, useTransition, useEffect } from 'react';
 import { Alert, AlertTitle } from '@/components/ui/alert';
 import { useParams, useRouter } from 'next/navigation';
 import { Separator } from '@/components/ui/separator';
+import { Loader2, Trash2 } from 'lucide-react';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { tryCatch } from '@/hooks/try-catch';
