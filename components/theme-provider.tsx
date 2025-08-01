@@ -45,7 +45,8 @@ export function ThemeProvider({ children, defaultTheme = 'dark', ...props }: The
 
     // Handle defaultTheme changes separately
     useEffect(() => {
-        if (!mounted && !localStorage.getItem('theme')) {
+        // Only apply defaultTheme if no user preference exists
+        if (mounted && !localStorage.getItem('theme')) {
             setTheme(defaultTheme);
         }
     }, [defaultTheme, mounted]);
