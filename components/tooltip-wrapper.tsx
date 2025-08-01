@@ -15,7 +15,7 @@ export function TooltipWrapper({
     command?: React.ReactNode;
 }) {
     return (
-        <Tooltip key={label}>
+        <Tooltip>
             <TooltipTrigger className={cn(className)} {...props}>
                 {children}
             </TooltipTrigger>
