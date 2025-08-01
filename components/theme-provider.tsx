@@ -104,17 +104,9 @@ export function ThemeProvider({ children, defaultTheme = 'dark', ...props }: The
     };
 
     // Prevent hydration mismatch by not rendering until mounted
-    if (!mounted) {
-        return (
-            <ThemeProviderContext.Provider {...props} value={value}>
-                {children}
-            </ThemeProviderContext.Provider>
-        );
-    }
-
     return (
         <ThemeProviderContext.Provider {...props} value={value}>
-            {children}
+            {mounted ? children : null}
         </ThemeProviderContext.Provider>
     );
 }
