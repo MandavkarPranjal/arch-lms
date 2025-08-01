@@ -25,14 +25,29 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" suppressHydrationWarning>
+        <html lang="en" suppressHydrationWarning className="disable-transitions">
+            <head>
+                <script
+                    dangerouslySetInnerHTML={{
+                        __html: `
+                            (function() {
+                                const theme = localStorage.getItem('theme') || 'dark';
+                                const root = document.documentElement;
+                                root.classList.add('disable-transitions');
+                                if (theme === 'dark') {
+                                    root.classList.add('dark');
+                                    root.style.colorScheme = 'dark';
+                                } else {
+                                    root.classList.remove('dark');
+                                    root.style.colorScheme = 'light';
+                                }
+                            })();
+                        `,
+                    }}
+                />
+            </head>
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                >
+                <ThemeProvider defaultTheme="dark">
                     {children}
                     <Toaster position="bottom-center" />
                     {/* // add 'closeButton' for close button */}
