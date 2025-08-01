@@ -25,39 +25,14 @@ export default function RootLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en" suppressHydrationWarning className="disable-transitions">
-            <head>
-                <script
-                    dangerouslySetInnerHTML={{
-                        __html: `
-                            (function() {
-                                try {
-                                    const theme = localStorage.getItem('theme') || 'dark';
-                                    if (theme !== 'dark' && theme !== 'light') {
-                                        localStorage.setItem('theme', 'dark');
-                                        theme = 'dark';
-                                    }
-                                const root = document.documentElement;
-                                root.classList.add('disable-transitions');
-                                if (theme === 'dark') {
-                                    root.classList.add('dark');
-                                    root.style.colorScheme = 'dark';
-                                } else {
-                                    root.classList.remove('dark');
-                                    root.style.colorScheme = 'light';
-                                }
-                                } catch (e) {
-                                    // Fallback if localStorage is unavailable
-                                    document.documentElement.classList.add('dark');
-                                    document.documentElement.style.colorScheme = 'dark';
-                                }
-                            })();
-                        `,
-                    }}
-                />
-            </head>
+        <html lang="en" suppressHydrationWarning>
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-                <ThemeProvider defaultTheme="dark">
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
                     {children}
                     <Toaster position="bottom-center" />
                     {/* // add 'closeButton' for close button */}

@@ -1,32 +1,31 @@
-'use client';
+"use client";
 
+import Image from "next/image";
+import Link from "next/link";
+import VercelLogo from "@/public/vercel.svg";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import {
-    NavigationMenu,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-} from '@/components/ui/navigation-menu';
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { Button, buttonVariants } from '@/components/ui/button';
-import { ThemeToggle } from '@/components/theme-toggle';
-import { authClient } from '@/lib/auth-client';
-import { UserDropdown } from './userDropdown';
-import VercelLogo from '@/public/vercel.svg';
-import Image from 'next/image';
-import Link from 'next/link';
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import { authClient } from "@/lib/auth-client";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { UserDropdown } from "./userDropdown";
+import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from "@/components/ui/navigation-menu";
 
 const navigationItems = [
-    { name: 'Home', href: '/' },
-    { name: 'Courses', href: '/courses' },
-    { name: 'Dashboard', href: '/dashboard' },
-];
+    { name: "Home", href: "/" },
+    { name: "Courses", href: "/courses" },
+    { name: "Dashboard", href: "/dashboard" },
+]
 
 export function Navbar() {
-    const { data: session, isPending } = authClient.useSession();
+    const { data: session, isPending } = authClient.useSession()
     return (
         <header
             // className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-[backdrop-filter]:bg-background/60"
-            className="bg-background/95 backdrop-blur-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b px-4 md:px-6"
+            className="sticky top-0 z-50 w-full border-b px-4 md:px-6 bg-background/95 backdrop-blur-[backdrop-filter]:bg-background/60"
         >
             <div className="flex h-16 items-center justify-between gap-4">
                 {/* Left side */}
@@ -34,7 +33,11 @@ export function Navbar() {
                     {/* Mobile menu trigger */}
                     <Popover>
                         <PopoverTrigger asChild>
-                            <Button className="group size-8 md:hidden" variant="ghost" size="icon">
+                            <Button
+                                className="group size-8 md:hidden"
+                                variant="ghost"
+                                size="icon"
+                            >
                                 <svg
                                     className="pointer-events-none"
                                     width={16}
@@ -67,7 +70,10 @@ export function Navbar() {
                                 <NavigationMenuList className="flex-col items-start gap-0 md:gap-2">
                                     {navigationItems.map((item) => (
                                         <NavigationMenuItem key={item.name} className="w-full">
-                                            <NavigationMenuLink href={item.href} className="py-1.5">
+                                            <NavigationMenuLink
+                                                href={item.href}
+                                                className="py-1.5"
+                                            >
                                                 {item.name}
                                             </NavigationMenuLink>
                                         </NavigationMenuItem>
@@ -78,7 +84,7 @@ export function Navbar() {
                     </Popover>
                     {/* Main nav */}
                     <div className="flex items-center gap-6">
-                        <Link href="/" className="mr-4 flex items-center space-x-2">
+                        <Link href="/" className="flex items-center space-x-2 mr-4">
                             <Image src={VercelLogo} alt="Logo" className="size-9" />
                             <span className="font-bold">Arch LMS</span>
                         </Link>
@@ -113,36 +119,37 @@ export function Navbar() {
                  <div className="flex items-center space-x-4">
                  */}
                 <div className="flex items-center space-x-4">
+
                     <ThemeToggle />
 
                     {isPending ? null : session ? (
                         <UserDropdown
                             email={session.user.email}
-                            image={
-                                session?.user.image ??
-                                `https://avatar.vercel.sh/${session?.user.email}`
-                            }
+                            image={session?.user.image ?? `https://avatar.vercel.sh/${session?.user.email}`}
                             name={
                                 session?.user.name && session.user.name.length > 0
                                     ? session.user.name
-                                    : session?.user.email.split('@')[0]
+                                    : session?.user.email.split("@")[0]
                             }
                         />
                     ) : (
                         <>
                             <Link
                                 href="/login"
-                                className={buttonVariants({ variant: 'secondary' })}
+                                className={buttonVariants({ variant: "secondary" })}
                             >
                                 Login
                             </Link>
-                            <Link href="/login" className={buttonVariants()}>
+                            <Link
+                                href="/login"
+                                className={buttonVariants()}
+                            >
                                 Get Started
                             </Link>
                         </>
                     )}
                 </div>
             </div>
-        </header>
-    );
+        </header >
+    )
 }
