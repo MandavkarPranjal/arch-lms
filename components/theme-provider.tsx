@@ -35,13 +35,15 @@ export function ThemeProvider({ children, defaultTheme = 'dark', ...props }: The
         const savedTheme = localStorage.getItem('theme') as Theme;
         if (savedTheme && (savedTheme === 'dark' || savedTheme === 'light')) {
             setTheme(savedTheme);
+        } else {
+            setTheme(defaultTheme);
         }
 
         // Remove the disable-transitions class after initial load
         setTimeout(() => {
             document.documentElement.classList.remove('disable-transitions');
         }, 100);
-    }, []);
+    }, [defaultTheme]);
 
     const applyTheme = (newTheme: Theme) => {
         if (!mounted) return;
