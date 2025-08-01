@@ -18,12 +18,16 @@ import {
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
-import { ChevronDown, ChevronRight, FileText, GripVertical, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronRight, FileText, GripVertical } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AdminGetSingularCourse } from '@/app/data/admin/admin-get-course';
 import { reorderChapters, reorderLessons } from '../actions';
 import { ReactNode, useEffect, useState } from 'react';
+import { NewChapterModal } from './newChapterModal';
+import { NewLessonModal } from './newLessonModal';
 import { Button } from '@/components/ui/button';
+import { DeleteChapter } from './deleteChapter';
+import { DeleteLesson } from './deleteLesson';
 import { CSS } from '@dnd-kit/utilities';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
@@ -271,6 +275,7 @@ export function CourseStructure({ data }: AppProps) {
             <Card>
                 <CardHeader className="border-border flex flex-row items-center justify-between border-b">
                     <CardTitle>Chapters</CardTitle>
+                    <NewChapterModal courseId={data.id} />
                 </CardHeader>
                 <CardContent className="space-y-8">
                     <SortableContext strategy={verticalListSortingStrategy} items={items}>
@@ -308,9 +313,10 @@ export function CourseStructure({ data }: AppProps) {
                                                         {item.title}
                                                     </p>
                                                 </div>
-                                                <Button size="icon" variant="outline">
-                                                    <Trash2 className="size-4" />
-                                                </Button>
+                                                <DeleteChapter
+                                                    chapterId={item.id}
+                                                    courseId={data.id}
+                                                />
                                             </div>
 
                                             <CollapsibleContent>
@@ -348,24 +354,21 @@ export function CourseStructure({ data }: AppProps) {
                                                                             </Link>
                                                                         </div>
 
-                                                                        <Button
-                                                                            size="icon"
-                                                                            variant="outline"
-                                                                        >
-                                                                            <Trash2 className="size-4" />
-                                                                        </Button>
+                                                                        <DeleteLesson
+                                                                            chapterId={item.id}
+                                                                            courseId={data.id}
+                                                                            lessonId={lesson.id}
+                                                                        />
                                                                     </div>
                                                                 )}
                                                             </SortableItem>
                                                         ))}
                                                     </SortableContext>
                                                     <div className="p-2">
-                                                        <Button
-                                                            variant="outline"
-                                                            className="w-full"
-                                                        >
-                                                            Create New Lesson
-                                                        </Button>
+                                                        <NewLessonModal
+                                                            chapterId={item.id}
+                                                            courseId={data.id}
+                                                        />
                                                     </div>
                                                 </div>
                                             </CollapsibleContent>
