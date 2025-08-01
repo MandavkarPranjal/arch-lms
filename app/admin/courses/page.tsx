@@ -18,9 +18,9 @@ export default async function CoursesPage() {
 
             {data.length === 0 ? (
                 <EmptyState
-                    title="No Courses found"
-                    description="Create a new course to get started"
-                    buttonText="Create Your First Course"
+                    title="No courses yet"
+                    description="Add a course to get started."
+                    buttonText="Add course"
                     href="/admin/courses/create"
                 />
             ) : (
