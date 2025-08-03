@@ -33,7 +33,8 @@ export async function getCourseForDeletion(courseId: string) {
             } else {
                 return {
                     status: 'error',
-                    message: 'You are a bot! if this a mistake contact our support',
+                    message:
+                        'Request blocked by security filters. If this is a mistake, please contact support.',
                 };
             }
         }
