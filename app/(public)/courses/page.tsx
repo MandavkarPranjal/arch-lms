@@ -8,8 +8,8 @@ export default function PublicCoursesRoute() {
             <div className="mb-10 flex flex-col items-center space-y-2 text-center">
                 <h1 className="text-3xl font-bold tracking-tight md:text-4xl">Explore Courses</h1>
                 <p className="text-muted-foreground">
-                    Discover a wide range of courses designed by industry expert to help you achieve
-                    your goals.
+                    Discover a wide range of courses designed by industry experts to help you
+                    achieve your goals.
                 </p>
             </div>
             <Suspense fallback={<LoadingSkeletonLayout />}>
