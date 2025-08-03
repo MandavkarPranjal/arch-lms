@@ -1,14 +1,44 @@
 'use server';
 
 import { requireAdmin } from '@/app/data/admin/require-admin';
+import arcjet, { fixedWindow } from '@/lib/arcjet';
 import { revalidatePath } from 'next/cache';
 import { ApiResponse } from '@/lib/types';
+import { request } from '@arcjet/next';
 import { prisma } from '@/lib/db';
 
+const aj = arcjet.withRule(
+    fixedWindow({
+        mode: 'LIVE',
+        window: '1m',
+        max: 5,
+    }),
+);
+
 export async function getCourseForDeletion(courseId: string) {
-    await requireAdmin();
+    const session = await requireAdmin();
 
     try {
+        const req = await request();
+        const decision = await aj.protect(req, {
+            fingerprint: session.user.id,
+        });
+
+        if (decision.isDenied()) {
+            if (decision.reason.isRateLimit()) {
+                return {
+                    status: 'error',
+                    message: 'You have been blocked due to rate limiting',
+                };
+            } else {
+                return {
+                    status: 'error',
+                    message:
+                        'Request blocked by security filters. If this is a mistake, please contact support.',
+                };
+            }
+        }
+
         const course = await prisma.course.findUnique({
             where: { id: courseId },
             select: { id: true, title: true },

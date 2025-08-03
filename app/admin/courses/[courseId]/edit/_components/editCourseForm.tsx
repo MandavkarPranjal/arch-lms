@@ -117,7 +117,12 @@ export function EditCourseForm({ data }: AppProps) {
                         onClick={() => {
                             const titleValue = form.getValues('title');
 
-                            const slug = slugify(titleValue);
+                            const slug = slugify(titleValue, {
+                                replacement: '-',
+                                lower: true,
+                                strict: true,
+                                trim: true,
+                            });
 
                             form.setValue('slug', slug, { shouldValidate: true });
                         }}
