@@ -58,11 +58,11 @@ export default async function SlugPage({ params }: { params: Params }) {
                                 <span>{course.level}</span>
                             </Badge>
                             <Badge className="flex items-center gap-1 px-3 py-1">
-                                <IconCategory className="size-4/>" />
+                                <IconCategory className="size-4" />
                                 <span>{course.category}</span>
                             </Badge>
                             <Badge className="flex items-center gap-1 px-3 py-1">
-                                <IconClock className="size-4/>" />
+                                <IconClock className="size-4" />
                                 <span>{course.duration} hours</span>
                             </Badge>
                         </div>
