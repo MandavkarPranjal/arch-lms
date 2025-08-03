@@ -5,6 +5,7 @@ export async function getIndividualCourse(slug: string) {
     const course = await prisma.course.findUnique({
         where: {
             slug: slug,
+            status: 'Published',
         },
         select: {
             id: true,
