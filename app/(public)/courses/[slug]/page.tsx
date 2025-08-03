@@ -17,7 +17,6 @@ import { notFound } from 'next/navigation';
 import { CheckIcon } from 'lucide-react';
 import { env } from '@/lib/env';
 import Image from 'next/image';
-import { toast } from 'sonner';
 
 type Params = Promise<{
     slug: string;
