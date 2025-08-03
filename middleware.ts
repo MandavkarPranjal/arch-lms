@@ -4,7 +4,7 @@ import { getSessionCookie } from 'better-auth/cookies';
 import { env } from './lib/env';
 
 const aj = arcjet({
-    key: env.ARCJET_KEY!, // Get your site key from https://app.arcjet.com
+    key: env.ARCJET_KEY!,
     rules: [
         detectBot({
             mode: 'LIVE', // will block requests. Use "DRY_RUN" to log only
