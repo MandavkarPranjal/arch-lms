@@ -17,6 +17,7 @@ import { notFound } from 'next/navigation';
 import { CheckIcon } from 'lucide-react';
 import { env } from '@/lib/env';
 import Image from 'next/image';
+import { toast } from 'sonner';
 
 type Params = Promise<{
     slug: string;
@@ -75,6 +76,29 @@ export default async function SlugPage({ params }: { params: Params }) {
                             </h2>
 
                             <RenderDescription json={JSON.parse(course.description)} />
+                            <RenderDescription
+                                json={(() => {
+                                    try {
+                                        return JSON.parse(course.description);
+                                    } catch (error) {
+                                        console.error('Failed to parse course description:', error);
+                                        return {
+                                            type: 'doc',
+                                            content: [
+                                                {
+                                                    type: 'paragraph',
+                                                    content: [
+                                                        {
+                                                            type: 'text',
+                                                            text: 'Description unavailable',
+                                                        },
+                                                    ],
+                                                },
+                                            ],
+                                        };
+                                    }
+                                })()}
+                            />
                         </div>
                     </div>
 
