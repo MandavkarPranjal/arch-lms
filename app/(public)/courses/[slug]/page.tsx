@@ -17,7 +17,6 @@ import { notFound } from 'next/navigation';
 import { CheckIcon } from 'lucide-react';
 import { env } from '@/lib/env';
 import Image from 'next/image';
-import { toast } from 'sonner';
 
 type Params = Promise<{
     slug: string;
@@ -36,7 +35,7 @@ export default async function SlugPage({ params }: { params: Params }) {
                 <div className="order-1 lg:col-span-2">
                     <div className="relative aspect-video w-full overflow-hidden rounded-xl shadow-lg">
                         <Image
-                            src={`https://${env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES}.t3.storageapi.dev/${course.filekey}`} // NOTE: this is a hack, cause is public facing
+                            src={`https://${env.NEXT_PUBLIC_S3_BUCKET_NAME_IMAGES}.t3.storageapi.dev/${encodeURIComponent(course.filekey)}`}
                             alt={`${course.title} thumbnail`}
                             fill
                             className="object-cover"
@@ -280,7 +279,6 @@ export default async function SlugPage({ params }: { params: Params }) {
             </div>
         );
     } catch (error) {
-        toast.error('Failed to fetch course');
         console.error('Failed to fetch course:', error);
         notFound();
     }
