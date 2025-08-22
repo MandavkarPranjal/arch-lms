@@ -8,15 +8,17 @@ import {
 } from '@tabler/icons-react';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { RenderDescription } from '@/components/rich-text-editor/RenderDescription';
+import { checkIfUserBought } from '@/app/data/user/user-is-enrolled';
 import { getIndividualCourse } from '@/app/data/course/get-course';
+import { EnrollmentButton } from './_components/EnrollmentButton';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { notFound } from 'next/navigation';
 import { CheckIcon } from 'lucide-react';
 import { env } from '@/lib/env';
 import Image from 'next/image';
+import Link from 'next/link';
 
 type Params = Promise<{
     slug: string;
@@ -26,6 +28,7 @@ export default async function SlugPage({ params }: { params: Params }) {
     const { slug } = await params;
     try {
         const course = await getIndividualCourse(slug);
+        const isEnrolled = await checkIfUserBought(course.id);
         if (!course) {
             notFound();
         }
@@ -290,7 +293,11 @@ export default async function SlugPage({ params }: { params: Params }) {
                                     </ul>
                                 </div>
 
-                                <Button className="w-full">Enroll Now!</Button>
+                                {isEnrolled ? (
+                                    <Link href="/dashboard">Watch Course</Link>
+                                ) : (
+                                    <EnrollmentButton courseId={course.id} />
+                                )}
                                 <p className="text-muted-foreground mt-3 text-center text-xs">
                                     30-day money-back guarantee
                                 </p>
