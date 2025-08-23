@@ -11,8 +11,6 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { authClient } from '@/lib/auth-client';
 import { UserDropdown } from './userDropdown';
-import VercelLogo from '@/public/vercel.svg';
-import Image from 'next/image';
 import Link from 'next/link';
 
 const navigationItems = [
@@ -24,10 +22,7 @@ const navigationItems = [
 export function Navbar() {
     const { data: session, isPending } = authClient.useSession();
     return (
-        <header
-            // className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-[backdrop-filter]:bg-background/60"
-            className="bg-background/95 backdrop-blur-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b px-4 md:px-6"
-        >
+        <header className="bg-background/95 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b px-4 backdrop-blur md:px-6">
             <div className="flex h-16 items-center justify-between gap-4">
                 {/* Left side */}
                 <div className="flex items-center gap-2">
@@ -79,8 +74,12 @@ export function Navbar() {
                     {/* Main nav */}
                     <div className="flex items-center gap-6">
                         <Link href="/" className="mr-4 flex items-center space-x-2">
-                            <Image src={VercelLogo} alt="Logo" className="size-9" />
-                            <span className="font-bold">Arch LMS</span>
+                            <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
+                                <span className="text-primary-foreground text-sm font-bold">
+                                    AM
+                                </span>
+                            </div>
+                            <span className="font-bold">ArchMentor</span>
                         </Link>
                         {/* Navigation menu */}
                         <NavigationMenu className="max-md:hidden">
@@ -99,19 +98,7 @@ export function Navbar() {
                         </NavigationMenu>
                     </div>
                 </div>
-                {/* Desktop navigation */}
-                {/**
-                   <nav className="hidden md:flex md:flex-1 md:items-center md:justify-between">
-                   <div className="flex items-center space-x-2">
-                   {navigationItems.map((item) => (
-                   <Link key={item.name} href={item.href} className="text-sm font-medium transition-colors hover:text-primary">
-                   {item.name}
-                   </Link>
-                   ))}
-                   </div>
 
-                 <div className="flex items-center space-x-4">
-                 */}
                 <div className="flex items-center space-x-4">
                     <ThemeToggle />
 
