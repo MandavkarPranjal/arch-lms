@@ -1,5 +1,5 @@
 import { ArrowRight, SchoolIcon, Sparkles, TimerIcon } from 'lucide-react';
-import { PublicCourseType } from '@/app/data/course/get-all-courses';
+import type { PublicCourseType } from '@/app/data/course/get-all-courses';
 import { useConstructUrl } from '@/hooks/use-construct-url';
 import { Card, CardContent } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
@@ -16,56 +16,67 @@ interface AppProps {
 export function PublicCourseCard({ data, isLatest = false }: AppProps) {
     const thumbnailUrl = useConstructUrl(data.filekey);
     return (
-        <Card className="group relative gap-0 py-0">
+        <Card className="group bg-card relative gap-0 overflow-hidden border-0 py-0 shadow-lg transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl">
             {isLatest && (
-                <Badge className="bg-destructive/80 absolute top-2 left-2 z-10">
-                    <Sparkles className="size-4" />
+                <Badge className="from-primary to-primary/80 text-primary-foreground absolute top-4 left-4 z-10 bg-gradient-to-r shadow-lg">
+                    <Sparkles className="mr-1 size-3" />
                     New
                 </Badge>
             )}
-            <Badge className="bg-primary/85 absolute top-2 right-2 z-10">{data.level}</Badge>
+            <Badge className="bg-muted/90 text-muted-foreground absolute top-4 right-4 z-10 backdrop-blur-sm">
+                {data.level}
+            </Badge>
 
-            <Image
-                src={thumbnailUrl}
-                alt={`${data.title} thumbnail`}
-                width={600}
-                height={400}
-                className="aspect-video h-full w-full rounded-t-lg object-cover"
-            />
+            <div className="relative overflow-hidden">
+                <Image
+                    src={thumbnailUrl}
+                    alt={`${data.title} thumbnail`}
+                    width={600}
+                    height={400}
+                    className="aspect-video h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            </div>
 
-            <CardContent className="p-4">
+            <CardContent className="p-6">
                 <Link
                     href={`/courses/${data.slug}`}
-                    className="group-hover:text-primary line-clamp-2 text-lg font-medium transition-colors hover:underline"
+                    className="group-hover:text-primary text-card-foreground line-clamp-2 font-serif text-xl leading-tight font-semibold transition-colors hover:underline"
                 >
                     {data.title}
                 </Link>
-                <p className="text-muted-foreground mt-2 line-clamp-2 text-sm leading-tight">
+                <p className="text-muted-foreground mt-3 line-clamp-2 leading-relaxed">
                     {data.smallDescription}
                 </p>
 
-                <div className="mt-4 flex items-center gap-x-5">
+                <div className="mt-6 flex items-center gap-x-6">
                     <div className="flex items-center gap-x-2">
-                        <TimerIcon className="text-primary bg-primary/10 size-6 rounded-md p-1" />
-                        <p className="text-muted-foreground text-sm">{data.duration}h</p>
+                        <div className="bg-primary/10 rounded-lg p-2">
+                            <TimerIcon className="text-primary size-4" />
+                        </div>
+                        <span className="text-card-foreground text-sm font-medium">
+                            {data.duration}h
+                        </span>
                     </div>
-                    {/**
-                     * TODO: might need to remove this or replace with price
-                     */}
                     <div className="flex items-center gap-x-2">
-                        <SchoolIcon className="text-primary bg-primary/10 size-6 rounded-md p-1" />
-                        <p className="text-muted-foreground text-sm">{data.category}</p>
+                        <div className="bg-muted rounded-lg p-2">
+                            <SchoolIcon className="text-muted-foreground size-4" />
+                        </div>
+                        <span className="text-card-foreground text-sm font-medium">
+                            {data.category}
+                        </span>
                     </div>
                 </div>
 
                 <Link
                     href={`/courses/${data.slug}`}
                     className={buttonVariants({
-                        className: 'mt-4 w-full',
+                        className:
+                            'from-primary to-primary/80 hover:from-primary/90 hover:to-primary/70 text-primary-foreground mt-6 w-full bg-gradient-to-r font-medium shadow-lg transition-all duration-200 hover:shadow-xl',
                     })}
                 >
-                    Learn More
-                    <ArrowRight className="size-4" />
+                    Explore Course
+                    <ArrowRight className="ml-2 size-4" />
                 </Link>
             </CardContent>
         </Card>
@@ -74,35 +85,37 @@ export function PublicCourseCard({ data, isLatest = false }: AppProps) {
 
 export function PublicCourseCardSkeleton() {
     return (
-        <Card className="group relative gap-0 py-0">
-            <div className="absolute top-2 right-2 z-10 flex items-center">
-                <Skeleton className="h-6 w-20 rounded-full" />
+        <Card className="group relative overflow-hidden border-0 bg-white shadow-lg">
+            <div className="absolute top-4 right-4 z-10 flex items-center">
+                <Skeleton className="h-6 w-16 rounded-full" />
             </div>
             <div className="relative h-fit w-full">
-                <Skeleton className="aspect-video w-full rounded-t-xl" />
+                <Skeleton className="aspect-video w-full" />
             </div>
 
-            <CardContent className="p-4">
-                <div className="space-y-2">
+            <CardContent className="p-6">
+                <div className="space-y-3">
                     <Skeleton className="h-6 w-full" />
                     <Skeleton className="h-6 w-3/4" />
                 </div>
 
-                <div className="mt-4 flex items-center gap-x-5">
+                <div className="mt-4 space-y-2">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-2/3" />
+                </div>
+
+                <div className="mt-6 flex items-center gap-x-6">
                     <div className="flex items-center gap-x-2">
-                        <Skeleton className="size-6 rounded-md" />
+                        <Skeleton className="size-8 rounded-lg" />
                         <Skeleton className="h-4 w-8" />
                     </div>
-                    {/**
-                     * TODO: might need to remove this
-                     */}
                     <div className="flex items-center gap-x-2">
-                        <Skeleton className="size-6 rounded-md" />
-                        <Skeleton className="h-4 w-8" />
+                        <Skeleton className="size-8 rounded-lg" />
+                        <Skeleton className="h-4 w-12" />
                     </div>
                 </div>
 
-                <Skeleton className="mt-4 h-10 w-full rounded-md" />
+                <Skeleton className="mt-6 h-11 w-full rounded-md" />
             </CardContent>
         </Card>
     );

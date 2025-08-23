@@ -1,15 +1,10 @@
-import { ArrowRight, BookOpen, Users, BarChart3, Lightbulb, Star } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import { buttonVariants } from '@/components/ui/button';
+import { ArrowRight, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import Prism from '@/components/prism';
 import type React from 'react';
 import Link from 'next/link';
-
-interface FeatureProps {
-    title: string;
-    description: string;
-    icon: React.ReactNode;
-}
 
 interface TestimonialProps {
     name: string;
@@ -18,33 +13,6 @@ interface TestimonialProps {
     content: string;
     rating: number;
 }
-
-const features: FeatureProps[] = [
-    {
-        title: 'Comprehensive Courses',
-        description:
-            'Access a wide range of carefully curated courses designed by industry experts and licensed architects.',
-        icon: <BookOpen className="text-primary-foreground h-8 w-8" />,
-    },
-    {
-        title: 'Interactive Learning',
-        description:
-            'Engage with 3D models, CAD simulations, and real-world project assessments to enhance your skills.',
-        icon: <Lightbulb className="text-primary-foreground h-8 w-8" />,
-    },
-    {
-        title: 'Progress Tracking',
-        description:
-            'Monitor your progress with detailed analytics, certification tracking, and personalized learning paths.',
-        icon: <BarChart3 className="text-primary-foreground h-8 w-8" />,
-    },
-    {
-        title: 'Community Support',
-        description:
-            'Connect with fellow architects, instructors, and industry experts for peer-to-peer learning and mentorship.',
-        icon: <Users className="text-primary-foreground h-8 w-8" />,
-    },
-];
 
 const testimonials: TestimonialProps[] = [
     {
@@ -78,9 +46,29 @@ export default function Home() {
         <>
             {/* Hero Section */}
             <section className="relative py-24 lg:py-32">
-                <div className="container mx-auto flex max-w-4xl flex-col items-center space-y-8 text-center">
+                {/* Background Prism - positioned absolutely to overlap */}
+                <div className="absolute inset-0 h-full w-full">
+                    <Prism
+                        animationType="rotate"
+                        timeScale={0.5}
+                        height={2.6}
+                        baseWidth={5.5}
+                        scale={4}
+                        hueShift={0}
+                        colorFrequency={1}
+                        noise={0.5}
+                        glow={1}
+                        position="absolute"
+                        transparent={true}
+                        zIndex={-1}
+                    />
+                </div>
+                <div className="relative z-1 container mx-auto flex max-w-4xl flex-col items-center space-y-8 text-center">
                     <div className="mx-auto flex max-w-4xl flex-col items-center space-y-8 text-center">
-                        <Badge variant="outline" className="text-primary border-primary-foreground">
+                        <Badge
+                            variant="outline"
+                            className="bg-primary/10 text-primary inline-flex items-center rounded-full px-4 py-2 text-sm font-medium"
+                        >
                             The Future of Architecture Education
                         </Badge>
 
@@ -181,7 +169,7 @@ export default function Home() {
             </section>
 
             {/* Final CTA Section */}
-            <section className="bg-primary text-primary-foreground py-24">
+            <section className="bg-primary/95 supports-[backdrop-filter]:bg-primary/90 text-primary-foreground py-24">
                 <div className="container mx-auto px-4 md:px-6 lg:px-8">
                     <div className="mx-auto max-w-3xl text-center">
                         <h2 className="mb-6 font-serif text-3xl font-bold md:text-4xl">
