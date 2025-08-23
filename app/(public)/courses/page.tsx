@@ -4,8 +4,8 @@ import { Suspense } from 'react';
 
 export default function PublicCoursesRoute() {
     return (
-        <div className="from-background via-muted/30 to-secondary/20 min-h-screen bg-gradient-to-br">
-            <div className="container mx-auto px-4 py-16">
+        <div className="from-background via-muted/30 to-secondary/20 bg-gradient-to-br">
+            <div className="container mx-auto px-4 py-16 pt-32">
                 <div className="mb-16 flex flex-col items-center space-y-6 text-center">
                     <div className="bg-primary/10 text-primary inline-flex items-center rounded-full px-4 py-2 text-sm font-medium">
                         <span className="mr-2">🎓</span>

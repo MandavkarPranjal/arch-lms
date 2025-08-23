@@ -34,8 +34,8 @@ export default async function SlugPage({ params }: { params: Params }) {
         }
 
         return (
-            <div className="from-background via-background to-muted/20 min-h-screen bg-gradient-to-br">
-                <div className="container mx-auto px-4 py-8">
+            <div className="from-background via-background to-muted/20 bg-gradient-to-br">
+                <div className="container mx-auto px-4 py-8 pt-32">
                     <div className="grid grid-cols-1 gap-12 lg:grid-cols-3">
                         <div className="order-1 lg:col-span-2">
                             <div className="ring-border/50 relative aspect-video w-full overflow-hidden rounded-2xl shadow-2xl ring-1">
@@ -47,7 +47,6 @@ export default async function SlugPage({ params }: { params: Params }) {
                                     priority
                                 />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>
-                                <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
                             </div>
 
                             <div className="mt-12 space-y-8">
