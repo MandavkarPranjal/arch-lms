@@ -1,4 +1,5 @@
 import { ThemeProvider } from '@/components/theme-provider';
+import { LenisProvider } from '@/components/lenis-provider';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Toaster } from '@/components/ui/sonner';
 import type { Metadata } from 'next';
@@ -58,7 +59,7 @@ export default function RootLayout({
             </head>
             <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
                 <ThemeProvider defaultTheme="dark">
-                    {children}
+                    <LenisProvider>{children}</LenisProvider>
                     <Toaster position="bottom-center" />
                     {/* // add 'closeButton' for close button */}
                 </ThemeProvider>
