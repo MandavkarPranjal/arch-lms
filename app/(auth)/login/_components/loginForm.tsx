@@ -3,13 +3,13 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Loader, Loader2, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { LastUsedBadge } from './lastUsedBadge';
 import { useState, useTransition } from 'react';
 import { authClient } from '@/lib/auth-client';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
-import { Badge } from '@/components/ui/badge';
 
 export function LoginForm() {
     const router = useRouter();
@@ -59,8 +59,12 @@ export function LoginForm() {
 
     return (
         <Card>
-            <CardHeader>
-                <CardTitle className="text-xl">Welcome back!</CardTitle>
+            <CardHeader className="text-center">
+                {lastLoginMethod ? (
+                    <CardTitle className="text-xl">Welcome back!</CardTitle>
+                ) : (
+                    <CardTitle className="text-xl">Start learning</CardTitle>
+                )}
                 <CardDescription>Login with your Google or Email account</CardDescription>
             </CardHeader>
 
@@ -68,17 +72,17 @@ export function LoginForm() {
                 <Button
                     disabled={googlePending}
                     onClick={signInWithGoogle}
-                    className="w-full relative overflow-visible"
-                    variant="outline"
+                    className="relative w-full cursor-pointer overflow-visible"
+                    variant={lastLoginMethod === 'google' ? 'default' : 'outline'}
                 >
                     {googlePending ? (
-                        <div className="flex items-center justify-center gap-2 w-full">
+                        <div className="flex w-full items-center justify-center gap-2">
                             <Loader className="size-4 animate-spin" />
                             <span>Loading...</span>
                         </div>
                     ) : (
                         <>
-                            <div className="flex items-center justify-center gap-2 w-full">
+                            <div className="flex w-full items-center justify-center gap-2">
                                 <svg
                                     xmlns="http://www.w3.org/2000/svg"
                                     width="0.98em"
@@ -110,11 +114,7 @@ export function LoginForm() {
                                 <span className="text-sm select-none">Continue with Google</span>
                             </div>
 
-                            {lastLoginMethod === 'google' && (
-                                <Badge className="absolute top-2 right-2 z-20 text-[10px] px-2 py-0.5 rounded-full transform -rotate-6 origin-center pointer-events-none shadow-sm">
-                                    Last used
-                                </Badge>
-                            )}
+                            {lastLoginMethod === 'google' && <LastUsedBadge />}
                         </>
                     )}
                 </Button>
@@ -137,23 +137,24 @@ export function LoginForm() {
                         />
                     </div>
 
-                    <Button onClick={signInWithEmail} disabled={emailPending} className="relative">
+                    <Button
+                        onClick={signInWithEmail}
+                        disabled={emailPending}
+                        className="relative cursor-pointer"
+                        variant={lastLoginMethod === 'email' ? 'default' : 'outline'}
+                    >
                         {emailPending ? (
-                            <div className="flex items-center justify-center gap-2 w-full">
+                            <div className="flex w-full items-center justify-center gap-2">
                                 <Loader2 className="size-4 animate-spin" />
                                 <span>Sending...</span>
                             </div>
                         ) : (
                             <>
-                                <div className="flex items-center justify-center gap-2 w-full">
+                                <div className="flex w-full items-center justify-center gap-2">
                                     <Send className="size-4" />
                                     <span>Continue with Email</span>
                                 </div>
-                                {lastLoginMethod === 'email' && (
-                                    <Badge className="absolute top-2 right-2 z-20 text-[10px] px-2 py-0.5 rounded-full transform -rotate-6 origin-center pointer-events-none shadow-sm">
-                                        Last used
-                                    </Badge>
-                                )}
+                                {lastLoginMethod === 'email' && <LastUsedBadge />}
                             </>
                         )}
                     </Button>
