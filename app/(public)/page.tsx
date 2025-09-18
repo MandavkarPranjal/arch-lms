@@ -4,14 +4,11 @@ import { ProgressiveBlur } from '@/components/ui/progressive-blur';
 import { Card, CardContent } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
 import { useState, useEffect, Suspense } from 'react';
+import PixelBlast from '@/components/PixelBlast';
 import { ArrowRight, Star } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import type React from 'react';
 import Link from 'next/link';
-import { lazy } from 'react';
-
-// Lazy load the heavy Prism component
-const Prism = lazy(() => import('@/components/prism'));
 
 interface TestimonialProps {
     name: string;
@@ -53,23 +50,23 @@ export default function Home() {
     const [contentOpacity, setContentOpacity] = useState(1);
 
     useEffect(() => {
-        const handleScroll = () => {
-            const currentScrollY = window.scrollY;
-
-            // Calculate blur intensity based on scroll position
-            // Start with full blur (6) and reduce as user scrolls down
-            const maxScroll = window.innerHeight * 0.8; // 80% of viewport height
-            const scrollProgress = Math.min(currentScrollY / maxScroll, 1);
-            const newBlurIntensity = 6 * (1 - scrollProgress * 0.7); // Reduce blur by up to 70%
-            setBlurIntensity(Math.max(newBlurIntensity, 0.5)); // Minimum blur of 0.5
-
-            // Calculate content opacity - fade out slightly as user scrolls
-            const newOpacity = 1 - scrollProgress * 0.3; // Reduce opacity by up to 30%
-            setContentOpacity(Math.max(newOpacity, 0.7)); // Minimum opacity of 0.7
-        };
-
-        window.addEventListener('scroll', handleScroll, { passive: true });
-        return () => window.removeEventListener('scroll', handleScroll);
+        // const handleScroll = () => {
+        //     const currentScrollY = window.scrollY;
+        //
+        //     // Calculate blur intensity based on scroll position
+        //     // Start with full blur (6) and reduce as user scrolls down
+        //     const maxScroll = window.innerHeight * 0.8; // 80% of viewport height
+        //     const scrollProgress = Math.min(currentScrollY / maxScroll, 1);
+        //     const newBlurIntensity = 6 * (1 - scrollProgress * 0.7); // Reduce blur by up to 70%
+        //     setBlurIntensity(Math.max(newBlurIntensity, 0.5)); // Minimum blur of 0.5
+        //
+        //     // Calculate content opacity - fade out slightly as user scrolls
+        //     const newOpacity = 1 - scrollProgress * 0.3; // Reduce opacity by up to 30%
+        //     setContentOpacity(Math.max(newOpacity, 0.7)); // Minimum opacity of 0.7
+        // };
+        //
+        // window.addEventListener('scroll', handleScroll, { passive: true });
+        // return () => window.removeEventListener('scroll', handleScroll);
     }, []);
 
     return (
@@ -83,20 +80,19 @@ export default function Home() {
                             <div className="from-primary/5 to-primary/10 h-full w-full bg-gradient-to-br" />
                         }
                     >
-                        <Prism
-                            animationType="rotate"
-                            timeScale={0.3}
-                            height={2.6}
-                            baseWidth={5.5}
-                            scale={3}
-                            hueShift={0}
-                            colorFrequency={1}
-                            noise={0.05}
-                            glow={0.8}
-                            position="absolute"
-                            transparent={true}
-                            zIndex={-1}
-                            suspendWhenOffscreen={true}
+                        <PixelBlast
+                            variant="square"
+                            pixelSize={4}
+                            patternScale={2}
+                            patternDensity={1}
+                            pixelSizeJitter={0}
+                            enableRipples
+                            rippleSpeed={0.4}
+                            rippleThickness={0.12}
+                            rippleIntensityScale={1.5}
+                            speed={0.6}
+                            edgeFade={0.25}
+                            transparent
                         />
                     </Suspense>
                 </div>

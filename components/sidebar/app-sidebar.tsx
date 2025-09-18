@@ -1,6 +1,5 @@
-"use client"
+'use client';
 
-import * as React from "react"
 import {
     IconCamera,
     IconChartBar,
@@ -13,11 +12,9 @@ import {
     IconSearch,
     IconSettings,
     IconUsers,
-} from "@tabler/icons-react"
+} from '@tabler/icons-react';
+import * as React from 'react';
 
-import { NavMain } from "@/components/sidebar/nav-main"
-import { NavSecondary } from "@/components/sidebar/nav-secondary"
-import { NavUser } from "@/components/sidebar/nav-user"
 import {
     Sidebar,
     SidebarContent,
@@ -26,105 +23,107 @@ import {
     SidebarMenu,
     SidebarMenuButton,
     SidebarMenuItem,
-} from "@/components/ui/sidebar"
-import Link from "next/link"
-import Image from "next/image"
-import VercelLogo from "@/public/vercel.svg";
+} from '@/components/ui/sidebar';
+import { NavSecondary } from '@/components/sidebar/nav-secondary';
+import { NavUser } from '@/components/sidebar/nav-user';
+import { NavMain } from '@/components/sidebar/nav-main';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const data = {
     navMain: [
         {
-            title: "Dashboard",
-            url: "/admin",
+            title: 'Dashboard',
+            url: '/admin',
             icon: IconDashboard,
         },
         {
-            title: "Courses",
-            url: "/admin/courses",
+            title: 'Courses',
+            url: '/admin/courses',
             icon: IconListDetails,
         },
         {
-            title: "Analytics",
-            url: "#",
+            title: 'Analytics',
+            url: '#',
             icon: IconChartBar,
         },
         {
-            title: "Projects",
-            url: "#",
+            title: 'Projects',
+            url: '#',
             icon: IconFolder,
         },
         {
-            title: "Team",
-            url: "#",
+            title: 'Team',
+            url: '#',
             icon: IconUsers,
         },
     ],
     navClouds: [
         {
-            title: "Capture",
+            title: 'Capture',
             icon: IconCamera,
             isActive: true,
-            url: "#",
+            url: '#',
             items: [
                 {
-                    title: "Active Proposals",
-                    url: "#",
+                    title: 'Active Proposals',
+                    url: '#',
                 },
                 {
-                    title: "Archived",
-                    url: "#",
+                    title: 'Archived',
+                    url: '#',
                 },
             ],
         },
         {
-            title: "Proposal",
+            title: 'Proposal',
             icon: IconFileDescription,
-            url: "#",
+            url: '#',
             items: [
                 {
-                    title: "Active Proposals",
-                    url: "#",
+                    title: 'Active Proposals',
+                    url: '#',
                 },
                 {
-                    title: "Archived",
-                    url: "#",
+                    title: 'Archived',
+                    url: '#',
                 },
             ],
         },
         {
-            title: "Prompts",
+            title: 'Prompts',
             icon: IconFileAi,
-            url: "#",
+            url: '#',
             items: [
                 {
-                    title: "Active Proposals",
-                    url: "#",
+                    title: 'Active Proposals',
+                    url: '#',
                 },
                 {
-                    title: "Archived",
-                    url: "#",
+                    title: 'Archived',
+                    url: '#',
                 },
             ],
         },
     ],
     navSecondary: [
         {
-            title: "Settings",
-            url: "#",
+            title: 'Settings',
+            url: '#',
             icon: IconSettings,
         },
         {
-            title: "Get Help",
-            url: "#",
+            title: 'Get Help',
+            url: '#',
             icon: IconHelp,
         },
         {
-            title: "Search",
-            url: "#",
+            title: 'Search',
+            url: '#',
             icon: IconSearch,
         },
     ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     return (
@@ -136,9 +135,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                             asChild
                             className="data-[slot=sidebar-menu-button]:!p-1.5"
                         >
-                            <Link href="/">
-                                <Image src={VercelLogo} alt="logo" className="size-5" />
-                                <span className="text-base font-semibold">Arch LMS.</span>
+                            <Link href="/" className="flex items-center gap-2">
+                                <Image src="/logo.png" alt="logo" width={164} height={164} />
                             </Link>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -152,5 +150,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <NavUser />
             </SidebarFooter>
         </Sidebar>
-    )
+    );
 }

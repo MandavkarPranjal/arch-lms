@@ -85,7 +85,7 @@ export function PublicCourseCard({ data, isLatest = false }: AppProps) {
 
 export function PublicCourseCardSkeleton() {
     return (
-        <Card className="group relative overflow-hidden border-0 bg-white shadow-lg">
+        <Card className="group relative gap-0 overflow-hidden border-0 py-0 shadow-lg">
             <div className="absolute top-4 right-4 z-10 flex items-center">
                 <Skeleton className="h-6 w-16 rounded-full" />
             </div>

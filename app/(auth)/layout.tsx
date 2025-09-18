@@ -18,8 +18,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             </Link>
             <div className="flex w-full max-w-sm flex-col gap-6">
                 <Link className="flex items-center gap-2 self-center font-medium" href="/">
-                    <Image src="/vercel.svg" alt="Logo" width={32} height={32} />
-                    Arch - LMS
+                    <Image src="/logo.png" alt="Logo" width={264} height={264} unoptimized />
                 </Link>
                 {children}
 

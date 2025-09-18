@@ -1,5 +1,6 @@
 'use client';
 
+import Image from 'next/image';
 import Link from 'next/link';
 
 export function Footer() {
@@ -9,12 +10,7 @@ export function Footer() {
                 <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
                     <div className="space-y-4">
                         <div className="flex items-center space-x-2">
-                            <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
-                                <span className="text-primary-foreground text-sm font-bold">
-                                    AM
-                                </span>
-                            </div>
-                            <span className="font-serif text-xl font-bold">ArchMentor</span>
+                            <Image src="/logo.png" alt="Logo" width={164} height={164} />
                         </div>
                         <p className="text-muted-foreground">
                             Empowering the next generation of architects through innovative

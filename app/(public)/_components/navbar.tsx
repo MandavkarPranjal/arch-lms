@@ -11,10 +11,10 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { ThemeToggle } from '@/components/theme-toggle';
 import { authClient } from '@/lib/auth-client';
 import { UserDropdown } from './userDropdown';
+import Image from 'next/image';
 import Link from 'next/link';
 
 const navigationItems = [
-    { name: 'Home', href: '/' },
     { name: 'Courses', href: '/courses' },
     { name: 'Dashboard', href: '/dashboard' },
 ];
@@ -74,12 +74,7 @@ export function Navbar() {
                     {/* Main nav */}
                     <div className="flex items-center gap-6">
                         <Link href="/" className="mr-4 flex items-center space-x-2">
-                            <div className="bg-primary flex h-8 w-8 items-center justify-center rounded-lg">
-                                <span className="text-primary-foreground text-sm font-bold">
-                                    AM
-                                </span>
-                            </div>
-                            <span className="font-bold">ArchMentor</span>
+                            <Image src="/logo.png" alt="Logo" width={164} height={164} />
                         </Link>
                         {/* Navigation menu */}
                         <NavigationMenu className="max-md:hidden">
