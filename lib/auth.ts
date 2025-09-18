@@ -1,5 +1,5 @@
 import { prismaAdapter } from 'better-auth/adapters/prisma';
-import { emailOTP } from 'better-auth/plugins';
+import { emailOTP, lastLoginMethod } from 'better-auth/plugins';
 import OtpEmail from '@/components/email/otp';
 import { admin } from 'better-auth/plugins';
 import { betterAuth } from 'better-auth';
@@ -32,5 +32,6 @@ export const auth = betterAuth({
             },
         }),
         admin(),
+        lastLoginMethod(),
     ],
 });

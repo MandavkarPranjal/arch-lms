@@ -9,12 +9,14 @@ import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
 
 export function LoginForm() {
     const router = useRouter();
     const [googlePending, startGoogleTransition] = useTransition();
     const [emailPending, startEmailTransition] = useTransition();
     const [email, setEmail] = useState('');
+    const lastLoginMethod = authClient.getLastUsedLoginMethod();
 
     // Google handler
     async function signInWithGoogle() {
@@ -66,43 +68,53 @@ export function LoginForm() {
                 <Button
                     disabled={googlePending}
                     onClick={signInWithGoogle}
-                    className="w-full"
+                    className="w-full relative overflow-visible"
                     variant="outline"
                 >
                     {googlePending ? (
-                        <>
+                        <div className="flex items-center justify-center gap-2 w-full">
                             <Loader className="size-4 animate-spin" />
                             <span>Loading...</span>
-                        </>
+                        </div>
                     ) : (
                         <>
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="0.98em"
-                                height="1em"
-                                viewBox="0 0 256 262"
-                            >
-                                <path
-                                    fill="#4285F4"
-                                    d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622l38.755 30.023l2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"
-                                ></path>
+                            <div className="flex items-center justify-center gap-2 w-full">
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="0.98em"
+                                    height="1em"
+                                    viewBox="0 0 256 262"
+                                    className="flex-shrink-0"
+                                    aria-hidden
+                                >
+                                    <path
+                                        fill="#4285F4"
+                                        d="M255.878 133.451c0-10.734-.871-18.567-2.756-26.69H130.55v48.448h71.947c-1.45 12.04-9.283 30.172-26.69 42.356l-.244 1.622l38.755 30.023l2.685.268c24.659-22.774 38.875-56.282 38.875-96.027"
+                                    ></path>
 
-                                <path
-                                    fill="#34A853"
-                                    d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055c-34.523 0-63.824-22.773-74.269-54.25l-1.531.13l-40.298 31.187l-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"
-                                ></path>
+                                    <path
+                                        fill="#34A853"
+                                        d="M130.55 261.1c35.248 0 64.839-11.605 86.453-31.622l-41.196-31.913c-11.024 7.688-25.82 13.055-45.257 13.055c-34.523 0-63.824-22.773-74.269-54.25l-1.531.13l-40.298 31.187l-.527 1.465C35.393 231.798 79.49 261.1 130.55 261.1"
+                                    ></path>
 
-                                <path
-                                    fill="#FBBC05"
-                                    d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82c0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602z"
-                                ></path>
+                                    <path
+                                        fill="#FBBC05"
+                                        d="M56.281 156.37c-2.756-8.123-4.351-16.827-4.351-25.82c0-8.994 1.595-17.697 4.206-25.82l-.073-1.73L15.26 71.312l-1.335.635C5.077 89.644 0 109.517 0 130.55s5.077 40.905 13.925 58.602z"
+                                    ></path>
 
-                                <path
-                                    fill="#EB4335"
-                                    d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
-                                ></path>
-                            </svg>
-                            Sign in with Google
+                                    <path
+                                        fill="#EB4335"
+                                        d="M130.55 50.479c24.514 0 41.05 10.589 50.479 19.438l36.844-35.974C195.245 12.91 165.798 0 130.55 0C79.49 0 35.393 29.301 13.925 71.947l42.211 32.783c10.59-31.477 39.891-54.251 74.414-54.251"
+                                    ></path>
+                                </svg>
+                                <span className="text-sm select-none">Continue with Google</span>
+                            </div>
+
+                            {lastLoginMethod === 'google' && (
+                                <Badge className="absolute top-2 right-2 z-20 text-[10px] px-2 py-0.5 rounded-full transform -rotate-6 origin-center pointer-events-none shadow-sm">
+                                    Last used
+                                </Badge>
+                            )}
                         </>
                     )}
                 </Button>
@@ -125,16 +137,23 @@ export function LoginForm() {
                         />
                     </div>
 
-                    <Button onClick={signInWithEmail} disabled={emailPending}>
+                    <Button onClick={signInWithEmail} disabled={emailPending} className="relative">
                         {emailPending ? (
-                            <>
+                            <div className="flex items-center justify-center gap-2 w-full">
                                 <Loader2 className="size-4 animate-spin" />
                                 <span>Sending...</span>
-                            </>
+                            </div>
                         ) : (
                             <>
-                                <Send className="size-4" />
-                                <span>Continue with Email</span>
+                                <div className="flex items-center justify-center gap-2 w-full">
+                                    <Send className="size-4" />
+                                    <span>Continue with Email</span>
+                                </div>
+                                {lastLoginMethod === 'email' && (
+                                    <Badge className="absolute top-2 right-2 z-20 text-[10px] px-2 py-0.5 rounded-full transform -rotate-6 origin-center pointer-events-none shadow-sm">
+                                        Last used
+                                    </Badge>
+                                )}
                             </>
                         )}
                     </Button>
