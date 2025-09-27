@@ -4,6 +4,7 @@ import { requireAdmin } from '@/app/data/admin/require-admin';
 import arcjet, { fixedWindow } from '@/lib/arcjet';
 import { revalidatePath } from 'next/cache';
 import { ApiResponse } from '@/lib/types';
+import { dodoPayments } from '@/lib/auth';
 import { request } from '@arcjet/next';
 import { prisma } from '@/lib/db';
 
@@ -61,10 +62,10 @@ export async function deleteCourse(
     await requireAdmin();
 
     try {
-        // First, get the course to verify the title matches
+        // First, get the course to verify the title and productId
         const course = await prisma.course.findUnique({
             where: { id: courseId },
-            select: { title: true },
+            select: { title: true, productId: true },
         });
 
         if (!course) {
@@ -80,6 +81,20 @@ export async function deleteCourse(
                 status: 'error',
                 message: 'Course name confirmation does not match!',
             };
+        }
+
+        // Archive the DodoPayments product if it exists
+        if (course.productId) {
+            try {
+                await dodoPayments.products.archive(course.productId);
+                console.log('DodoPayments product archived:', course.productId);
+            } catch (archiveError) {
+                console.error('Failed to archive DodoPayments product:', archiveError);
+                return {
+                    status: 'error',
+                    message: 'Failed to archive payment product. Course deletion aborted.',
+                };
+            }
         }
 
         await prisma.course.delete({
