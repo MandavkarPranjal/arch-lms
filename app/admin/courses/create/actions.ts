@@ -2,6 +2,7 @@
 
 import { courseSchema, CourseSchemaType } from '@/lib/zodSchemas';
 import { requireAdmin } from '@/app/data/admin/require-admin';
+import { useConstructUrl } from '@/hooks/use-construct-url';
 import arcjet, { fixedWindow } from '@/lib/arcjet';
 import { ApiResponse } from '@/lib/types';
 import { dodoPayments } from '@/lib/auth';
@@ -61,7 +62,7 @@ export async function CreateCourse(data: CourseSchemaType): Promise<ApiResponse>
                 price: {
                     currency: 'INR',
                     discount: 0,
-                    price: validation.data.price,
+                    price: validation.data.price * 100, // Convert to paisa (smallest denomination)
                     purchasing_power_parity: true,
                     type: 'one_time_price',
                 },
@@ -78,9 +79,10 @@ export async function CreateCourse(data: CourseSchemaType): Promise<ApiResponse>
             });
         } catch (productError) {
             console.error('Failed to create DodoPayments product:', productError);
-            // Optionally, you could delete the course if product creation fails
-            // await prisma.course.delete({ where: { id: course.id } });
-            // return { status: 'error', message: 'Failed to create payment product' };
+            return {
+                status: 'error',
+                message: 'Failed to create payment product',
+            };
         }
 
         return {
