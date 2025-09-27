@@ -187,11 +187,24 @@ export async function dodoEnrollInCourseAction(courseId: string) {
     console.log('Session:', session);
 
     try {
+        // Get the course with product ID
+        const courseWithProduct = await prisma.course.findUnique({
+            where: { id: courseId },
+            select: { id: true, title: true, price: true, productId: true },
+        });
+
+        if (!courseWithProduct || !courseWithProduct.productId) {
+            return {
+                status: 'error',
+                message: 'Course not found or product not configured',
+            };
+        }
+
         // Use DodoPayments client directly to bypass plugin authentication issue
         const checkoutSession = await dodoPayments.checkoutSessions.create({
             product_cart: [
                 {
-                    product_id: 'pdt_RluHNx8iVYLOihtAdFPmK', // Your product ID
+                    product_id: courseWithProduct.productId,
                     quantity: 1,
                 },
             ],
@@ -199,6 +212,8 @@ export async function dodoEnrollInCourseAction(courseId: string) {
                 email: user.email || 'customer@example.com',
                 name: user.name || 'John Doe',
             },
+            referenceId: `order_${courseId}`,
+            successUrl: `${env.BETTER_AUTH_URL}/payment/success`,
         });
 
         console.log('Checkout successful:', checkoutSession.checkout_url);

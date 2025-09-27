@@ -4,6 +4,7 @@ import { courseSchema, CourseSchemaType } from '@/lib/zodSchemas';
 import { requireAdmin } from '@/app/data/admin/require-admin';
 import arcjet, { fixedWindow } from '@/lib/arcjet';
 import { ApiResponse } from '@/lib/types';
+import { dodoPayments } from '@/lib/auth';
 import { request } from '@arcjet/next';
 import { prisma } from '@/lib/db';
 
@@ -47,12 +48,40 @@ export async function CreateCourse(data: CourseSchemaType): Promise<ApiResponse>
             };
         }
 
-        await prisma.course.create({
+        const course = await prisma.course.create({
             data: {
                 ...validation.data,
                 userId: session?.user.id as string,
             },
         });
+
+        // Create DodoPayments product
+        try {
+            const product = await dodoPayments.products.create({
+                price: {
+                    currency: 'INR',
+                    discount: 0,
+                    price: validation.data.price,
+                    purchasing_power_parity: true,
+                    type: 'one_time_price',
+                },
+                tax_category: 'edtech',
+                name: validation.data.title,
+            });
+
+            console.log('Product created:', JSON.stringify(product, null, 2)); // Log the full response
+
+            // Update course with product ID (use the correct field from the response)
+            await prisma.course.update({
+                where: { id: course.id },
+                data: { productId: product.product_id }, // Use product_id as per API response
+            });
+        } catch (productError) {
+            console.error('Failed to create DodoPayments product:', productError);
+            // Optionally, you could delete the course if product creation fails
+            // await prisma.course.delete({ where: { id: course.id } });
+            // return { status: 'error', message: 'Failed to create payment product' };
+        }
 
         return {
             status: 'success',
