@@ -1,0 +1,8 @@
+{
+  "agent": {
+    "dodopaymentdev": {
+      "description": "Reviews code for best practices and potential issues"
+    }
+  },
+  "$schema": "https://opencode.ai/config.json"
+}

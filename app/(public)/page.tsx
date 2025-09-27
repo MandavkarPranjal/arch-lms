@@ -46,9 +46,6 @@ const testimonials: TestimonialProps[] = [
 ];
 
 export default function Home() {
-    const [blurIntensity, setBlurIntensity] = useState(6);
-    const [contentOpacity, setContentOpacity] = useState(1);
-
     useEffect(() => {
         // const handleScroll = () => {
         //     const currentScrollY = window.scrollY;
@@ -98,7 +95,7 @@ export default function Home() {
                 </div>
                 <div
                     className="relative z-1 container mx-auto flex max-w-4xl flex-col items-center space-y-8 px-4 text-center transition-opacity duration-300 ease-out"
-                    style={{ opacity: contentOpacity }}
+                    style={{ opacity: 1 }}
                 >
                     <Badge
                         variant="outline"
@@ -157,7 +154,7 @@ export default function Home() {
                     </div>
                 </div>
                 <ProgressiveBlur
-                    blurIntensity={blurIntensity}
+                    blurIntensity={6}
                     className="transition-all duration-300 ease-out"
                 />
             </section>

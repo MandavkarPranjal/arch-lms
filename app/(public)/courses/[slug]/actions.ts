@@ -2,8 +2,11 @@
 
 import { requireUser } from '@/app/data/user/require-user';
 import arcjet, { fixedWindow } from '@/lib/arcjet';
+import { auth, dodoPayments } from '@/lib/auth';
+
 import { redirect } from 'next/navigation';
 import { ApiResponse } from '@/lib/types';
+import { headers } from 'next/headers';
 import { request } from '@arcjet/next';
 import { stripe } from '@/lib/stripe';
 import { prisma } from '@/lib/db';
@@ -173,4 +176,35 @@ export async function enrollInCourseAction(courseId: string): Promise<ApiRespons
     }
 
     redirect(checkoutUrl);
+}
+
+export async function dodoEnrollInCourseAction(courseId: string) {
+    const user = await requireUser();
+    console.log('User authenticated:', user);
+
+    // Log session for debugging
+    const session = await auth.api.getSession({ headers: await headers() });
+    console.log('Session:', session);
+
+    try {
+        // Use DodoPayments client directly to bypass plugin authentication issue
+        const checkoutSession = await dodoPayments.checkoutSessions.create({
+            product_cart: [
+                {
+                    product_id: 'pdt_RluHNx8iVYLOihtAdFPmK', // Your product ID
+                    quantity: 1,
+                },
+            ],
+            customer: {
+                email: user.email || 'customer@example.com',
+                name: user.name || 'John Doe',
+            },
+        });
+
+        console.log('Checkout successful:', checkoutSession.checkout_url);
+        return { success: true, url: checkoutSession.checkout_url };
+    } catch (err) {
+        console.error('Error in dodoEnrollInCourseAction:', err);
+        throw err;
+    }
 }

@@ -1,6 +1,6 @@
 'use client';
 
-import { enrollInCourseAction } from '../actions';
+import { dodoEnrollInCourseAction } from '../actions';
 import { Button } from '@/components/ui/button';
 import { tryCatch } from '@/hooks/try-catch';
 import { Loader2 } from 'lucide-react';
@@ -12,16 +12,17 @@ export function EnrollmentButton({ courseId }: { courseId: string }) {
 
     function onSubmit() {
         startTransition(async () => {
-            const { data: result, error } = await tryCatch(enrollInCourseAction(courseId));
+            const { data: result, error } = await tryCatch(dodoEnrollInCourseAction(courseId));
 
             if (error) {
                 toast.error('An unexpected error occurred. Please try again later.');
+                return;
             }
 
-            if (result?.status === 'success') {
-                toast.success(result.message);
-            } else if (result?.status === 'error') {
-                toast.error(result.message);
+            if (result?.success && result.url) {
+                window.location.href = result.url;
+            } else {
+                toast.error('Enrollment failed. Please try again.');
             }
         });
     }
