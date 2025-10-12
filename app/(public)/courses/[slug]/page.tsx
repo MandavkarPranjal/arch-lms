@@ -330,7 +330,10 @@ export default async function SlugPage({ params }: { params: Params }) {
                                                     Watch Course
                                                 </Link>
                                             ) : (
-                                                <EnrollmentButton courseId={course.id} />
+                                                <EnrollmentButton
+                                                    courseId={course.id}
+                                                    courseSlug={slug}
+                                                />
                                             )}
                                             <p className="text-muted-foreground text-center text-xs">
                                                 30-day money-back guarantee
