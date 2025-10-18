@@ -12,6 +12,7 @@ import { checkIfUserBought } from '@/app/data/user/user-is-enrolled';
 import { getIndividualCourse } from '@/app/data/course/get-course';
 import { EnrollmentButton } from './_components/EnrollmentButton';
 import { Card, CardContent } from '@/components/ui/card';
+import { buttonVariants } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { notFound } from 'next/navigation';
@@ -325,7 +326,9 @@ export default async function SlugPage({ params }: { params: Params }) {
                                             {isEnrolled ? (
                                                 <Link
                                                     href="/dashboard"
-                                                    className="bg-primary text-primary-foreground hover:bg-primary/90 flex w-full items-center justify-center rounded-xl px-6 py-4 font-semibold transition-colors"
+                                                    className={buttonVariants({
+                                                        className: 'w-full',
+                                                    })}
                                                 >
                                                     Watch Course
                                                 </Link>

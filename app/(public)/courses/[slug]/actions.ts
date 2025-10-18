@@ -145,7 +145,7 @@ export async function enrollInCourseAction(courseId: string): Promise<ApiRespons
                 ],
 
                 mode: 'payment',
-                success_url: `${env.BETTER_AUTH_URL}/payment/sucess?courseId=${course.id}&enrollmentId=${enrollment.id}`,
+                success_url: `${env.BETTER_AUTH_URL}/payment/success?courseId=${course.id}&enrollmentId=${enrollment.id}`,
                 cancel_url: `${env.BETTER_AUTH_URL}/payment/cancel?courseId=${course.id}&enrollmentId=${enrollment.id}`,
                 metadata: {
                     userId: user.id,
@@ -200,7 +200,78 @@ export async function dodoEnrollInCourseAction(courseId: string) {
             };
         }
 
-        // Use DodoPayments client directly to bypass plugin authentication issue
+        // Check if user is already enrolled
+        const existingEnrollment = await prisma.enrollment.findUnique({
+            where: {
+                userId_courseId: {
+                    userId: user.id,
+                    courseId: courseId,
+                },
+            },
+            select: {
+                status: true,
+                id: true,
+            },
+        });
+
+        if (existingEnrollment?.status === 'Active') {
+            return {
+                status: 'success',
+                message: 'You are already enrolled in this course',
+                alreadyEnrolled: true,
+            };
+        }
+
+        // Create or update pending enrollment
+        if (existingEnrollment) {
+            await prisma.enrollment.update({
+                where: {
+                    id: existingEnrollment.id,
+                },
+                data: {
+                    amount: courseWithProduct.price,
+                    status: 'Pending',
+                    updatedAt: new Date(),
+                },
+            });
+        } else {
+            await prisma.enrollment.create({
+                data: {
+                    userId: user.id,
+                    courseId: courseId,
+                    amount: courseWithProduct.price,
+                    status: 'Pending',
+                },
+            });
+        }
+
+        // Create or update pending enrollment
+        let enrollmentId: string;
+        if (existingEnrollment) {
+            await prisma.enrollment.update({
+                where: {
+                    id: existingEnrollment.id,
+                },
+                data: {
+                    amount: courseWithProduct.price,
+                    status: 'Pending',
+                    updatedAt: new Date(),
+                },
+            });
+            enrollmentId = existingEnrollment.id;
+        } else {
+            const enrollment = await prisma.enrollment.create({
+                data: {
+                    userId: user.id,
+                    courseId: courseId,
+                    amount: courseWithProduct.price,
+                    status: 'Pending',
+                },
+            });
+            enrollmentId = enrollment.id;
+        }
+
+        // Use DodoPayments client directly
         const checkoutSession = await dodoPayments.checkoutSessions.create({
             product_cart: [
                 {
@@ -212,8 +283,14 @@ export async function dodoEnrollInCourseAction(courseId: string) {
                 email: user.email || 'customer@example.com',
                 name: user.name || 'John Doe',
             },
-            referenceId: `order_${courseId}`,
-            successUrl: `${env.BETTER_AUTH_URL}/payment/success`,
+            success_url: `${env.BETTER_AUTH_URL}/payment/success?courseId=${courseId}&enrollmentId=${enrollmentId}`,
+            cancel_url: `${env.BETTER_AUTH_URL}/payment/cancel?courseId=${courseId}&enrollmentId=${enrollmentId}`,
+            webhook_url: `${env.BETTER_AUTH_URL}/api/auth/dodopayments/webhooks`,
+            metadata: {
+                enrollmentId: enrollmentId,
+                userId: user.id,
+                courseId: courseId,
+            },
         });
 
         console.log('Checkout successful:', checkoutSession.checkout_url);
