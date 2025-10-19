@@ -2,9 +2,9 @@
 
 import { RenderDescription } from '@/components/rich-text-editor/RenderDescription';
 import { LessonContentType } from '@/app/data/course/get-lesson-content';
+import { BookIcon, CheckCircle, FileTextIcon } from 'lucide-react';
 import { useConstructUrl } from '@/hooks/use-construct-url';
 import { MuxPlayerClient } from './_Player/MuxPlayerClient';
-import { BookIcon, CheckCircle } from 'lucide-react';
 import { useConfetti } from '@/hooks/use-confetti';
 import { Button } from '@/components/ui/button';
 import { MarkLessonComplete } from '../actions';
@@ -23,8 +23,9 @@ interface AppProps {
 export function CourseContent({ data, tokens }: AppProps) {
     const [pending, startTransition] = useTransition();
     const { triggerConfetti } = useConfetti();
+    const notesUrl = useConstructUrl(data.notesKey ?? '');
 
-    function VideoPlayer({ thumbnailKey, videoKey }: { thumbnailKey: string; videoKey: string }) {
+    function VideoPlayer({ videoKey }: { videoKey: string }) {
         if (!videoKey) {
             return (
                 <div className="bg-muted/70 flex aspect-video flex-col items-center justify-center rounded-lg">
@@ -66,7 +67,7 @@ export function CourseContent({ data, tokens }: AppProps) {
 
     return (
         <div className="bg-background flex h-full flex-col pl-6">
-            <VideoPlayer thumbnailKey={data.thumbnailKey ?? ''} videoKey={data.videoKey ?? ''} />
+            <VideoPlayer videoKey={data.videoKey ?? ''} />
 
             <div className="border-b py-6">
                 {data.lessonProgress.length > 0 ? (
@@ -91,6 +92,21 @@ export function CourseContent({ data, tokens }: AppProps) {
                     {data.description && <RenderDescription json={JSON.parse(data.description)} />}
                 </div>
             </div>
+
+            {data.notesKey && (
+                <div className="py-6">
+                    <div className="flex items-center gap-2 pb-4">
+                        <FileTextIcon className="size-5" />
+                        <h2 className="text-xl font-semibold">Lesson Notes</h2>
+                    </div>
+                    <Button variant="outline" asChild>
+                        <a href={notesUrl} target="_blank" rel="noopener noreferrer" download>
+                            <FileTextIcon className="mr-2 size-4" />
+                            Download Notes
+                        </a>
+                    </Button>
+                </div>
+            )}
         </div>
     );
 }
