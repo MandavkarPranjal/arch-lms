@@ -2,16 +2,12 @@
 
 import {
     IconCamera,
-    IconChartBar,
     IconDashboard,
     IconFileAi,
     IconFileDescription,
-    IconFolder,
     IconHelp,
-    IconListDetails,
     IconSearch,
     IconSettings,
-    IconUsers,
 } from '@tabler/icons-react';
 import * as React from 'react';
 
@@ -34,13 +30,8 @@ const data = {
     navMain: [
         {
             title: 'Dashboard',
-            url: '/admin',
+            url: '/dashboard',
             icon: IconDashboard,
-        },
-        {
-            title: 'Courses',
-            url: '/admin/courses',
-            icon: IconListDetails,
         },
     ],
     navClouds: [
@@ -91,13 +82,7 @@ const data = {
             ],
         },
     ],
-    navSecondary: [
-        {
-            title: 'Get Help',
-            url: '#',
-            icon: IconHelp,
-        },
-    ],
+    navSecondary: [],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
