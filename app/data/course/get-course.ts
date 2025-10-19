@@ -16,7 +16,6 @@ export async function getIndividualCourse(slug: string) {
             price: true,
             duration: true,
             level: true,
-            category: true,
             smallDescription: true,
             chapters: {
                 select: {

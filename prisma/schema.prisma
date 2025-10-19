@@ -94,7 +94,6 @@ model Course {
     duration    Int
     level       CourseLevel @default(Beginner)
 
-    category         String
     smallDescription String
     slug             String @unique
 

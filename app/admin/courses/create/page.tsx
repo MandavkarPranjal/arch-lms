@@ -55,7 +55,6 @@ export default function CourseCreatePage() {
             price: 0,
             duration: 0,
             level: 'Beginner',
-            category: 'Development',
             smallDescription: '',
             slug: '',
             status: 'Draft',
@@ -204,37 +203,6 @@ export default function CourseCreatePage() {
                             />
 
                             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                                <FormField
-                                    control={form.control}
-                                    name="category"
-                                    render={({ field }) => (
-                                        <FormItem className="w-full">
-                                            <FormLabel>Category</FormLabel>
-                                            <Select
-                                                onValueChange={field.onChange}
-                                                defaultValue={field.value}
-                                            >
-                                                <FormControl>
-                                                    <SelectTrigger className="w-full">
-                                                        <SelectValue placeholder="Select Category" />
-                                                    </SelectTrigger>
-                                                </FormControl>
-                                                <SelectContent>
-                                                    {courseCategories.map((categories) => (
-                                                        <SelectItem
-                                                            key={categories}
-                                                            value={categories}
-                                                        >
-                                                            {categories}
-                                                        </SelectItem>
-                                                    ))}
-                                                </SelectContent>
-                                            </Select>
-                                            <FormMessage />
-                                        </FormItem>
-                                    )}
-                                />
-
                                 <FormField
                                     control={form.control}
                                     name="level"

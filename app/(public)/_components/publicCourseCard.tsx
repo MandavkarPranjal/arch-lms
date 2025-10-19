@@ -62,9 +62,6 @@ export function PublicCourseCard({ data, isLatest = false }: AppProps) {
                         <div className="bg-muted rounded-lg p-2">
                             <SchoolIcon className="text-muted-foreground size-4" />
                         </div>
-                        <span className="text-card-foreground text-sm font-medium">
-                            {data.category}
-                        </span>
                     </div>
                 </div>
 

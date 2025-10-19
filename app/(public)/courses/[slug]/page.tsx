@@ -65,10 +65,6 @@ export default async function SlugPage({ params }: { params: Params }) {
                                         <IconChartBar className="size-4" />
                                         <span className="font-medium">{course.level}</span>
                                     </Badge>
-                                    <Badge className="bg-secondary/10 text-secondary-foreground hover:bg-secondary/20 flex items-center gap-2 px-4 py-2">
-                                        <IconCategory className="size-4" />
-                                        <span className="font-medium">{course.category}</span>
-                                    </Badge>
                                     <Badge className="bg-accent/10 text-accent-foreground hover:bg-accent/20 flex items-center gap-2 px-4 py-2">
                                         <IconClock className="size-4" />
                                         <span className="font-medium">{course.duration} hours</span>
@@ -251,20 +247,6 @@ export default async function SlugPage({ params }: { params: Params }) {
                                                         </p>
                                                         <p className="text-muted-foreground text-sm">
                                                             {course.level}
-                                                        </p>
-                                                    </div>
-                                                </div>
-
-                                                <div className="flex items-center gap-4">
-                                                    <div className="bg-primary/10 text-primary flex size-10 items-center justify-center rounded-full">
-                                                        <IconCategory className="size-5" />
-                                                    </div>
-                                                    <div>
-                                                        <p className="text-foreground font-medium">
-                                                            Category
-                                                        </p>
-                                                        <p className="text-muted-foreground text-sm">
-                                                            {course.category}
                                                         </p>
                                                     </div>
                                                 </div>
