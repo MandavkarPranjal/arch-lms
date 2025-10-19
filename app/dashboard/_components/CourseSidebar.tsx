@@ -2,6 +2,7 @@
 
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { CourseSidebarDataType } from '@/app/data/course/get-course-sidebar-data';
+import { useCourseProgress } from '@/hooks/use-course-progress';
 import { Progress } from '@/components/ui/progress';
 import { ChevronDown, Play } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -14,8 +15,11 @@ interface AppProps {
 
 export function CourseSibebar({ course }: AppProps) {
     const pathname = usePathname();
-
     const currentLessonId = pathname.split('/').pop();
+
+    const { completedLessons, totalLessons, progressPercentage } = useCourseProgress({
+        courseData: course,
+    });
     return (
         <div className="flex h-full flex-col">
             <div className="border-border border-b pr-4 pb-4">
@@ -35,10 +39,12 @@ export function CourseSibebar({ course }: AppProps) {
                 <div className="space-y-2">
                     <div className="flex justify-between text-xs">
                         <span className="text-muted-foreground">Progress</span>
-                        <span className="font-medium">4/10 lessons</span>
+                        <span className="font-medium">
+                            {completedLessons}/{totalLessons} lessons
+                        </span>
                     </div>
-                    <Progress value={55} className="h-1.5" />
-                    <p className="text-muted-foreground text-xs">55% Complete</p>
+                    <Progress value={progressPercentage} className="h-1.5" />
+                    <p className="text-muted-foreground text-xs">{progressPercentage}% Complete</p>
                 </div>
             </div>
 
@@ -71,6 +77,11 @@ export function CourseSibebar({ course }: AppProps) {
                                     lesson={lesson}
                                     slug={course.slug}
                                     isActive={currentLessonId === lesson.id}
+                                    completed={
+                                        lesson.lessonProgress.find(
+                                            (progress) => progress.lessonId === lesson.id,
+                                        )?.completed || false
+                                    }
                                 />
                             ))}
                         </CollapsibleContent>

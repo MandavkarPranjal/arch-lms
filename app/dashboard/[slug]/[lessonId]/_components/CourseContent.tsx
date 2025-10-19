@@ -1,14 +1,24 @@
+'use client';
+
 import { RenderDescription } from '@/components/rich-text-editor/RenderDescription';
 import { LessonContentType } from '@/app/data/course/get-lesson-content';
 import { useConstructUrl } from '@/hooks/use-construct-url';
 import { BookIcon, CheckCircle } from 'lucide-react';
+import { useConfetti } from '@/hooks/use-confetti';
 import { Button } from '@/components/ui/button';
+import { MarkLessonComplete } from '../actions';
+import { tryCatch } from '@/hooks/try-catch';
+import { useTransition } from 'react';
+import { toast } from 'sonner';
 
 interface AppProps {
     data: LessonContentType;
 }
 
 export function CourseContent({ data }: AppProps) {
+    const [pending, startTransition] = useTransition();
+    const { triggerConfetti } = useConfetti();
+
     function VideoPlayer({ thumbnailKey, videoKey }: { thumbnailKey: string; videoKey: string }) {
         const videoUrl = useConstructUrl(videoKey);
         const thumbnailUrl = useConstructUrl(thumbnailKey);
@@ -36,15 +46,45 @@ export function CourseContent({ data }: AppProps) {
             </div>
         );
     }
+
+    function onSubmit() {
+        startTransition(async () => {
+            const { data: result, error } = await tryCatch(
+                MarkLessonComplete(data.id, data.chapter.course.slug),
+            );
+
+            if (error) {
+                toast.error('An unexpected error occurred. Please try again later.');
+            }
+
+            if (result?.status === 'success') {
+                toast.success(result.message);
+                triggerConfetti();
+            } else if (result?.status === 'error') {
+                toast.error(result.message);
+            }
+        });
+    }
+
     return (
         <div className="bg-background flex h-full flex-col pl-6">
             <VideoPlayer thumbnailKey={data.thumbnailKey ?? ''} videoKey={data.videoKey ?? ''} />
 
             <div className="border-b py-6">
-                <Button variant="outline">
-                    <CheckCircle className="mr-2 size-4 text-green-500" />
-                    Mark as complete
-                </Button>
+                {data.lessonProgress.length > 0 ? (
+                    <Button
+                        variant="outline"
+                        className="bg-green-500/10 text-green-500 hover:text-green-600"
+                    >
+                        <CheckCircle className="mr-2 size-4 text-green-500" />
+                        Completed
+                    </Button>
+                ) : (
+                    <Button variant="outline" onClick={onSubmit} disabled={pending}>
+                        <CheckCircle className="mr-2 size-4 text-green-500" />
+                        Mark as complete
+                    </Button>
+                )}
 
                 <div className="space-y-3 pt-3">
                     <h1 className="text-foreground text-3xl font-bold tracking-tight">

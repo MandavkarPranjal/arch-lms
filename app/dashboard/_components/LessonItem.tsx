@@ -12,10 +12,10 @@ interface AppProps {
     };
     slug: string;
     isActive?: boolean;
+    completed: boolean;
 }
 
-export function LessonItem({ lesson, slug, isActive }: AppProps) {
-    const completed = false;
+export function LessonItem({ lesson, slug, isActive, completed }: AppProps) {
     return (
         <Link
             href={`/dashboard/${slug}/${lesson.id}`}

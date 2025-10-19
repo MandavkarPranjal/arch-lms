@@ -1,5 +1,4 @@
 import { requireUser } from '../user/require-user';
-import { lessonSchema } from '@/lib/zodSchemas';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/db';
 import 'server-only';
@@ -19,9 +18,23 @@ export async function getLessonContent(lessonId: string) {
             videoKey: true,
             notesKey: true,
             position: true,
+            lessonProgress: {
+                where: {
+                    userId: session.id,
+                },
+                select: {
+                    completed: true,
+                    lessonId: true,
+                },
+            },
             chapter: {
                 select: {
                     courseId: true,
+                    course: {
+                        select: {
+                            slug: true,
+                        },
+                    },
                 },
             },
         },
