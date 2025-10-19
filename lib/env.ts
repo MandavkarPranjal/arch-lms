@@ -15,6 +15,12 @@ export const env = createEnv({
         AWS_ENDPOINT_URL_S3: z.string().min(1),
         AWS_ENDPOINT_URL_IAM: z.string().min(1),
         AWS_REGION: z.string().min(1),
+        STRIPE_SECRET_KEY: z.string().min(1),
+        DODO_PAYMENTS_API_KEY: z.string().min(1),
+        DODO_PAYMENTS_WEBHOOK_SECRET: z.string().min(1),
+        DODO_ENVIRONMENT: z.enum(['test_mode', 'live_mode']),
+        MUX_SIGNIN_KEY_ID: z.string().min(1),
+        MUX_SIGNIN_KEY_SECRET: z.string().min(1),
     },
 
     client: {

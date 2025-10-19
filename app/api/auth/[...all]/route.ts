@@ -89,8 +89,22 @@ export const { GET } = authHandlers;
 
 // Wrap the POST handler with Arcjet protections
 export const POST = async (req: NextRequest) => {
-    const decision = await protect(req);
+    // Bypass Arcjet for DodoPayments webhooks: required to avoid false 403s
+    // and to preserve the raw body for signature verification.
+    const isDodoWebhookPath = req.nextUrl.pathname === '/api/auth/dodopayments/webhooks';
+    const hasDodoSignatureHeaders =
+        !!req.headers.get('webhook-id') &&
+        !!req.headers.get('webhook-timestamp') &&
+        !!req.headers.get('webhook-signature');
 
+    if (isDodoWebhookPath || hasDodoSignatureHeaders) {
+        // Important: do NOT read/clone/parse the body here.
+        // The @dodopayments/better-auth webhooks plugin will verify signature on the raw body.
+        return authHandlers.POST(req);
+    }
+
+    // All other auth requests still go through Arcjet
+    const decision = await protect(req);
     console.log('Arcjet Decision:', decision);
 
     if (decision.isDenied()) {

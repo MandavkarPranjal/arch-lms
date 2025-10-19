@@ -55,7 +55,6 @@ export function EditCourseForm({ data }: AppProps) {
             price: data.price,
             duration: data.duration,
             level: data.level,
-            category: data.category as CourseSchemaType['category'],
             smallDescription: data.smallDescription,
             slug: data.slug,
             status: data.status,
@@ -182,31 +181,6 @@ export function EditCourseForm({ data }: AppProps) {
                 />
 
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <FormField
-                        control={form.control}
-                        name="category"
-                        render={({ field }) => (
-                            <FormItem className="w-full">
-                                <FormLabel>Category</FormLabel>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                                    <FormControl>
-                                        <SelectTrigger className="w-full">
-                                            <SelectValue placeholder="Select Category" />
-                                        </SelectTrigger>
-                                    </FormControl>
-                                    <SelectContent>
-                                        {courseCategories.map((category) => (
-                                            <SelectItem key={category} value={category}>
-                                                {category}
-                                            </SelectItem>
-                                        ))}
-                                    </SelectContent>
-                                </Select>
-                                <FormMessage />
-                            </FormItem>
-                        )}
-                    />
-
                     <FormField
                         control={form.control}
                         name="level"

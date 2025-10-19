@@ -1,21 +1,28 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
-import { authClient } from "@/lib/auth-client";
-import { Loader2 } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useTransition } from "react";
-import { toast } from "sonner";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { useState, useTransition } from 'react';
+import { authClient } from '@/lib/auth-client';
+import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export default function VerifyRequest() {
     const router = useRouter();
-    const [otp, setOtp] = useState("");
+    const [otp, setOtp] = useState('');
     const [emailPending, startEmailTransition] = useTransition();
     const params = useSearchParams();
-    const email = params.get("email") as string;
+    const email = params.get('email') as string;
     const isOtpCompleted = otp.length === 6;
+
+    const setLastUsedLoginMethodCookie = () => {
+        const maxAge = 30 * 24 * 60 * 60; // 30 days in seconds
+        const name = 'better-auth.last_used_login_method';
+        const value = encodeURIComponent('email');
+        document.cookie = `${name}=${value}; Max-Age=${maxAge}; Path=/; SameSite=Lax; Priority=Medium`;
+    };
 
     function verifyOtp() {
         startEmailTransition(async () => {
@@ -24,21 +31,30 @@ export default function VerifyRequest() {
                 otp: otp,
                 fetchOptions: {
                     onSuccess: () => {
-                        toast.success("Email Verified");
-                        router.push("/");
+                        try {
+                            setLastUsedLoginMethodCookie();
+                        } catch (err) {
+                            console.warn('Failed to set last_used_login_method cookie', err);
+                            toast.error('Failed to set last used login method');
+                        }
+                        toast.success('Email Verified');
+                        router.push('/');
                     },
                     onError: () => {
-                        toast.error("Error verifying Email/OTP");
+                        toast.error('Error verifying Email/OTP');
                     },
                 },
             });
         });
     }
     return (
-        <Card className="w-full mx-auto">
+        <Card className="mx-auto w-full">
             <CardHeader className="text-center">
                 <CardTitle className="text-xl">Please check your email</CardTitle>
-                <CardDescription>We've sent you a verification code to your email address. Please opent the email and paste the code below.</CardDescription>
+                <CardDescription>
+                    We&apos;ve sent you a verification code to your email address. Please opent the
+                    email and paste the code below.
+                </CardDescription>
             </CardHeader>
 
             <CardContent className="space-y-6">
@@ -60,13 +76,15 @@ export default function VerifyRequest() {
                             <InputOTPSlot index={5} />
                         </InputOTPGroup>
                     </InputOTP>
-                    <p className="text-sm text-muted-foreground">Enter the 6-digit code to your email</p>
+                    <p className="text-muted-foreground text-sm">
+                        Enter the 6-digit code to your email
+                    </p>
                 </div>
 
                 <Button
                     onClick={verifyOtp}
                     disabled={emailPending || !isOtpCompleted}
-                    className="w-full"
+                    className="w-full cursor-pointer"
                 >
                     {emailPending ? (
                         <>
@@ -74,11 +92,10 @@ export default function VerifyRequest() {
                             <span>Loading...</span>
                         </>
                     ) : (
-                        "Verify Account"
+                        'Verify Account'
                     )}
                 </Button>
             </CardContent>
         </Card>
-    )
+    );
 }
-

@@ -12,6 +12,7 @@ import { requireAdmin } from '@/app/data/admin/require-admin';
 import arcjet, { fixedWindow } from '@/lib/arcjet';
 import { revalidatePath } from 'next/cache';
 import { ApiResponse } from '@/lib/types';
+import { dodoPayments } from '@/lib/auth';
 import { request } from '@arcjet/next';
 import { prisma } from '@/lib/db';
 
@@ -55,6 +56,19 @@ export async function editCourse(data: CourseSchemaType, courseId: string): Prom
             };
         }
 
+        // Fetch the existing course to get the productId
+        const existingCourse = await prisma.course.findUnique({
+            where: { id: courseId },
+            select: { productId: true },
+        });
+
+        if (!existingCourse) {
+            return {
+                status: 'error',
+                message: 'Course not found',
+            };
+        }
+
         await prisma.course.update({
             where: {
                 id: courseId,
@@ -64,6 +78,31 @@ export async function editCourse(data: CourseSchemaType, courseId: string): Prom
                 ...result.data,
             },
         });
+
+        // Update DodoPayments product if it exists
+        if (existingCourse.productId) {
+            try {
+                const updatedProduct = await dodoPayments.products.update(
+                    existingCourse.productId,
+                    {
+                        price: {
+                            currency: 'INR',
+                            discount: 0,
+                            price: result.data.price * 100, // Convert to rupee
+                            purchasing_power_parity: true,
+                            type: 'one_time_price',
+                        },
+                        tax_category: 'edtech',
+                        name: result.data.title,
+                    },
+                );
+            } catch (productError) {
+                return {
+                    status: 'error',
+                    message: 'Failed to update price of course',
+                };
+            }
+        }
 
         return {
             status: 'success',

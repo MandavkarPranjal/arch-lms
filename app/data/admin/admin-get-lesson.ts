@@ -1,6 +1,7 @@
 import { requireAdmin } from './require-admin';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/db';
+import 'server-only';
 
 export async function adminGetLesson(id: string) {
     await requireAdmin();

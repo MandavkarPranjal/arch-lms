@@ -36,7 +36,6 @@ export const courseSchema = z.object({
     duration: z.coerce.number().min(1, { message: 'Duration must be at least 1 hour' }),
     level: z.enum(courseLevels, { message: 'Level is required' }),
 
-    category: z.enum(courseCategories, { message: 'Category is required' }),
     smallDescription: z
         .string()
         .min(3, { message: 'Small description must be at least 3 character long' })
