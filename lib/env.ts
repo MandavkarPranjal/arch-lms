@@ -19,6 +19,8 @@ export const env = createEnv({
         DODO_PAYMENTS_API_KEY: z.string().min(1),
         DODO_PAYMENTS_WEBHOOK_SECRET: z.string().min(1),
         DODO_ENVIRONMENT: z.enum(['test_mode', 'live_mode']),
+        MUX_SIGNIN_KEY_ID: z.string().min(1),
+        MUX_SIGNIN_KEY_SECRET: z.string().min(1),
     },
 
     client: {

@@ -1,4 +1,5 @@
 import { getLessonContent } from '@/app/data/course/get-lesson-content';
+import { createToken } from './_components/_Player/tokenSignin';
 import { LessonSkeleton } from './_components/LessonSkeleton';
 import { CourseContent } from './_components/CourseContent';
 import { Suspense } from 'react';
@@ -16,6 +17,7 @@ export default async function LessonContentPage({ params }: { params: Params }) 
 
 async function LessonContentLoader({ lessonId }: { lessonId: string }) {
     const data = await getLessonContent(lessonId);
+    const tokens = await createToken(data.videoKey ?? '');
 
-    return <CourseContent data={data} />;
+    return <CourseContent data={data} tokens={tokens} />;
 }

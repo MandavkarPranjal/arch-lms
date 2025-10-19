@@ -113,33 +113,12 @@ export function LessonForm({ chapterId, courseId, data }: AppProps) {
                             />
                             <FormField
                                 control={form.control}
-                                name="thumbnailKey"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <FormLabel>Thumbnail Image</FormLabel>
-                                        <FormControl>
-                                            <Uploader
-                                                onChange={field.onChange}
-                                                value={field.value}
-                                                fileTypeAccepted="image"
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={form.control}
                                 name="videoKey"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Video File</FormLabel>
+                                        <FormLabel>Lesson Name</FormLabel>
                                         <FormControl>
-                                            <Uploader
-                                                onChange={field.onChange}
-                                                value={field.value}
-                                                fileTypeAccepted="video"
-                                            />
+                                            <Input placeholder="MUX Video Playback ID" {...field} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>

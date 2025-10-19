@@ -3,6 +3,7 @@
 import { RenderDescription } from '@/components/rich-text-editor/RenderDescription';
 import { LessonContentType } from '@/app/data/course/get-lesson-content';
 import { useConstructUrl } from '@/hooks/use-construct-url';
+import { MuxPlayerClient } from './_Player/MuxPlayerClient';
 import { BookIcon, CheckCircle } from 'lucide-react';
 import { useConfetti } from '@/hooks/use-confetti';
 import { Button } from '@/components/ui/button';
@@ -13,16 +14,17 @@ import { toast } from 'sonner';
 
 interface AppProps {
     data: LessonContentType;
+    tokens: {
+        playbackToken: string;
+        licenseToken: string;
+    };
 }
 
-export function CourseContent({ data }: AppProps) {
+export function CourseContent({ data, tokens }: AppProps) {
     const [pending, startTransition] = useTransition();
     const { triggerConfetti } = useConfetti();
 
     function VideoPlayer({ thumbnailKey, videoKey }: { thumbnailKey: string; videoKey: string }) {
-        const videoUrl = useConstructUrl(videoKey);
-        const thumbnailUrl = useConstructUrl(thumbnailKey);
-
         if (!videoKey) {
             return (
                 <div className="bg-muted/70 flex aspect-video flex-col items-center justify-center rounded-lg">
@@ -34,15 +36,11 @@ export function CourseContent({ data }: AppProps) {
 
         return (
             <div className="relative aspect-video overflow-hidden rounded-lg bg-black">
-                {/**
-                 * NOTE: This is where I add MUX player
-                 */}
-                <video className="h-full w-full object-cover" controls poster={thumbnailUrl}>
-                    <source src={videoUrl} type="video/mp4" />
-                    <source src={videoUrl} type="video/webm" />
-                    <source src={videoUrl} type="video/ogg" />
-                    Your browser does not support the video tag.
-                </video>
+                <MuxPlayerClient
+                    playbackId={videoKey}
+                    playbackToken={tokens.playbackToken}
+                    licenseToken={tokens.licenseToken}
+                />
             </div>
         );
     }
